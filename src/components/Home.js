@@ -5,19 +5,25 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { isMobile } from 'react-device-detect';
 import Lanyard from './Mobile'
+import { click } from '@testing-library/user-event/dist/click';
 
 export default function Home() {
     const refContainer = useRef(null);
 
     // Click handler function defined outside of useEffect
-    const clickHandler = (event, raycaster, pointer, camera, resume) => {
+    const clickHandler = (event, raycaster, pointer, camera, object) => {
         // Update the raycaster with the mouse position
         raycaster.setFromCamera(pointer, camera);
         // Check for intersections
-        const intersects = raycaster.intersectObject(resume);
-        if (intersects.length > 0) {
-            window.open('/textures/resume.png', '_blank');
+        if (raycaster.intersectObject(object).length > 0) {
+            if (object.name === "resume"){
+                window.open('/textures/resume.png', '_blank');
+            }
+            else if (object.name === "heart"){
+                window.open('https://organregistry.org/', '_blank');
+            }
         }
+
     };
 
     useEffect(() => {
@@ -217,9 +223,10 @@ export default function Home() {
         var resume = new THREE.Mesh(geometry, material);
         resume.position.set(resumeOriginalPosition.x, resumeOriginalPosition.y, resumeOriginalPosition.z);
         scene.add(resume);
+        resume.name = 'resume';
 
-        const handleClick = (event) => clickHandler(event, raycaster, pointer, camera, resume);
-        window.addEventListener('click', handleClick);
+        const clickResume = (event) => clickHandler(event, raycaster, pointer, camera, resume);
+        window.addEventListener('click', clickResume);
 
         
 
@@ -251,7 +258,11 @@ export default function Home() {
             const heartModelBBHelper = new THREE.Box3Helper(heartModelBB, 0xff0000);
             scene.add(heartModelBBHelper);
             heartModelBBHelper.visible = false;
+
+            heartModel.name = 'heart';
         });
+        const clickHeart = (event) => clickHandler(event, raycaster, pointer, camera, heartModel);
+        window.addEventListener('click', clickHeart);
 
         // animation
         const sensitivity = 9.5;
@@ -337,7 +348,8 @@ export default function Home() {
         animate();
 
         return () => {
-            window.removeEventListener('click', handleClick);
+            window.removeEventListener('click', clickResume);
+            window.removeEventListener('click', clickHeart);
         };
 
     }, []);
