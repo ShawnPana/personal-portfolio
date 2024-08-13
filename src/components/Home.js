@@ -27,10 +27,8 @@ export default function Home() {
     };
 
     useEffect(() => {
-
-        document.body.style.overflow = 'hidden';
-
         // scene setup
+        document.body.style.overflow = 'hidden';
         var scene = new THREE.Scene();
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -40,27 +38,6 @@ export default function Home() {
         scene.add(light)
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 10;
-        function KeepWithinView (object, objectDim, camera) {
-            console.log(objectDim)
-            // var objectDim = new THREE.Vector3();
-            // objectBB.getSize(objectDim);
-            // console.log(objectDim)
-            // console.log(objectBB)
-            
-            var min = new THREE.Vector2();
-            var max = new THREE.Vector2();
-            camera.getViewBounds(Math.abs(object.position.z - camera.position.z), min, max)
-
-            // make a ball at the origin with the same z position
-            // var ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}));
-            // ball.position.z = object.position.z;
-            // scene.add(ball);
-
-            // console.log(objectDim)
-            
-            glideToPosition(object, {x:min.x, y:max.y-objectDim.y, z:object.position.z}, 0.1);
-            // glideToPosition(object, {x:0, y:0-objectDim.y, z:object.position.z}, 0.1);
-        }
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
         window.addEventListener('pointermove', onPointerMove);
@@ -82,7 +59,6 @@ export default function Home() {
             raycaster.ray.intersectPlane(plane, intersectionPoint);
             target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
         });
-
         const fontLoader = new FontLoader();
         const gltfLoader = new GLTFLoader();
 
@@ -90,13 +66,6 @@ export default function Home() {
         function onPointerMove(event) {
             pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
             pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-        }
-        function distance(object1, object2) {
-            return Math.sqrt(
-                Math.pow(object1.position.x - object2.position.x, 2) +
-                Math.pow(object1.position.y - object2.position.y, 2) +
-                Math.pow(object1.position.z - object2.position.z, 2)
-            );
         }
         function glideToPosition(object, targetPosition, speed) {
             // Calculate the direction vector from the current position to the target position
@@ -133,9 +102,9 @@ export default function Home() {
             object.position.z += direction.z;
         }
 
-        let headerPosition = new THREE.Vector3();
 
         // scene object initialization
+        let headerPosition = new THREE.Vector3();
         let nameText;
         let nameTextDim;
         let nameTextBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
@@ -149,7 +118,6 @@ export default function Home() {
             const mesh = new THREE.Mesh( textGeo, textMaterial );
             scene.add( mesh );
             nameText = mesh;
-            textGeo.computeBoundingBox();
             // console.log(textGeo.boundingBox)
             // console.log(textGeo.boundingBox.min)
             // console.log(textGeo.boundingBox.max)
@@ -158,8 +126,9 @@ export default function Home() {
             scene.add(nameTextBBHelper);
             nameTextBBHelper.visible = false;
 
+            textGeo.computeBoundingBox();
             nameTextDim = new THREE.Box3(textGeo.boundingBox.min, textGeo.boundingBox.max)
-            console.log(nameTextDim.min, nameTextDim.max)
+            // console.log(nameTextDim.min, nameTextDim.max)
 
             var min = new THREE.Vector2();
             var max = new THREE.Vector2();
@@ -175,10 +144,22 @@ export default function Home() {
             nameText.position.y = headerPosition.y
             nameText.position.z = nameText.position.z
         }
-        // var nameTextBB = new BoundingBoxHelper(nameText, 0xff0000);
 
+        const resumeOriginalPosition = {x:13, y:-0.5, z:-20};
+        var texture = new THREE.TextureLoader().load('/textures/resume.png');
+        var geometry = new THREE.BoxGeometry(8.5, 11, 0.1);
+        var material = new THREE.MeshBasicMaterial({ 
+            map: texture,
+            side: THREE.DoubleSide
+         });
+        var resume = new THREE.Mesh(geometry, material);
+        resume.position.set(resumeOriginalPosition.x, resumeOriginalPosition.y, resumeOriginalPosition.z);
+        scene.add(resume);
+        resume.name = 'resume';
 
-    
+        const clickResume = (event) => clickHandler(event, raycaster, pointer, camera, resume);
+        window.addEventListener('click', clickResume);
+
 
         // cycle through titles
         const titles = ["Software Engineer", "Web Developer", "Musician", "3D Artist", "Lover", "Philosopher", "Creator", "Innovator", "Dreamer", "Educator", "2nd Year Undergraduate", "Student at UC San Diego", "Seeking Internship Opportunities"];
@@ -213,26 +194,9 @@ export default function Home() {
             titleText = loadTitle(currentTitle);
         }, 1000);
 
-        const resumeOriginalPosition = {x:13, y:-0.5, z:-20};
-        var texture = new THREE.TextureLoader().load('/textures/resume.png');
-        var geometry = new THREE.BoxGeometry(8.5, 11, 0.1);
-        var material = new THREE.MeshBasicMaterial({ 
-            map: texture,
-            side: THREE.DoubleSide
-         });
-        var resume = new THREE.Mesh(geometry, material);
-        resume.position.set(resumeOriginalPosition.x, resumeOriginalPosition.y, resumeOriginalPosition.z);
-        scene.add(resume);
-        resume.name = 'resume';
-
-        const clickResume = (event) => clickHandler(event, raycaster, pointer, camera, resume);
-        window.addEventListener('click', clickResume);
-
-        
 
         let loadedModel;
         let head;
-        // var modelOriginalPosition = {x:0, y:0, z:-150};
         var modelOriginalPosition = {x:0, y:-1.5, z:7};
         let loadedModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
         gltfLoader.load('/models/shawnfullbodyglb.glb', (gltf) => {
@@ -246,6 +210,7 @@ export default function Home() {
 
             gltf.scene.getObjectByName('forearm.L').rotation.x += Math.PI * .5;
         });
+
 
         const heartOriginalPosition = {x:-5, y:0, z:0};
         let heartModel;
@@ -264,6 +229,7 @@ export default function Home() {
         const clickHeart = (event) => clickHandler(event, raycaster, pointer, camera, heartModel);
         window.addEventListener('click', clickHeart);
 
+
         // animation
         const sensitivity = 9.5;
         var animate = function () {
@@ -271,6 +237,7 @@ export default function Home() {
             const t = clock.getElapsedTime();
             raycaster.setFromCamera(pointer, camera);
             camera.lookAt(scene.position);
+            
             if (loadedModel) {
                 if (moveBack) {
                     // loadedModel.lookAt({x:-2, y:0, z:6});
@@ -294,22 +261,11 @@ export default function Home() {
                 }
                 loadedModelBB.setFromObject(loadedModel);
             }
+
             if ( nameText ) {
-                var min = new THREE.Vector2();
-                var max = new THREE.Vector2();
-                camera.getViewBounds(Math.abs(nameText.position.z - camera.position.z), min, max)     
-                // if (moveBack){
-                //     // KeepWithinView(nameText, nameTextDim, camera);
-                //     glideToPosition(nameText, {x:min.x, y:max.y-nameTextDim.y, z:nameText.position.z}, 0.1);
-                // }
-                // else{
-                //     // glideToPosition(nameText, headerPosition, 1.5);
-                //     glideToPosition(nameText, {x:min.x, y:max.y-nameTextDim.y, z:nameText.position.z}, 0.1);
-                // }
-                // // nameTextBB.setFromObject(nameText);
                 nameTextBB.setFromObject(nameText);
             }
-            renderer.render(scene, camera);
+
             if (titleText){
                 // titleTextBB.setFromObject(titleText);
                 if (titleTextBB.intersectsBox(nameTextBB)){
@@ -319,7 +275,7 @@ export default function Home() {
                 //     glideToPosition(titleText, headerPosition, 1);
                 // }
                 titleTextBB.setFromObject(titleText);
-            };
+            }
 
             if (resume){
                 if (moveBack){
@@ -338,12 +294,18 @@ export default function Home() {
                     resume.rotation.y = t;
                     resume.position.y = Math.sin(t)*0.5;
                 }
+                // camera.getViewBounds(Math.abs(resume.position.z - camera.position.z), min, max)
+
+
 
             }
+
             if (heartModel){
                 heartModel.rotation.y = t;
                 heartModel.position.y = Math.sin(t)*0.1;
             }
+
+            renderer.render(scene, camera);
         };
         animate();
 
