@@ -3,38 +3,82 @@ import { useEffect, useRef } from 'react'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { isMobile } from 'react-device-detect';
+import Lanyard from './Mobile'
 
 export default function Home() {
     const refContainer = useRef(null);
 
+    // Click handler function defined outside of useEffect
+    const clickHandler = (event, raycaster, pointer, camera, resume) => {
+        // Update the raycaster with the mouse position
+        raycaster.setFromCamera(pointer, camera);
+        // Check for intersections
+        const intersects = raycaster.intersectObject(resume);
+        if (intersects.length > 0) {
+            window.open('/textures/resume.png', '_blank');
+        }
+    };
+
     useEffect(() => {
+
+        document.body.style.overflow = 'hidden';
 
         // scene setup
         var scene = new THREE.Scene();
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         refContainer.current && refContainer.current.appendChild( renderer.domElement );
-
+        var clock = new THREE.Clock();
         const light = new THREE.AmbientLight( 0xffffff, 10 ); 
         scene.add(light)
-
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.x = 10;
+        camera.position.z = 10;
+        function KeepWithinView (object, objectDim, camera) {
+            console.log(objectDim)
+            // var objectDim = new THREE.Vector3();
+            // objectBB.getSize(objectDim);
+            // console.log(objectDim)
+            // console.log(objectBB)
+            
+            var min = new THREE.Vector2();
+            var max = new THREE.Vector2();
+            camera.getViewBounds(Math.abs(object.position.z - camera.position.z), min, max)
 
+            // make a ball at the origin with the same z position
+            // var ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}));
+            // ball.position.z = object.position.z;
+            // scene.add(ball);
+
+            // console.log(objectDim)
+            
+            glideToPosition(object, {x:min.x, y:max.y-objectDim.y, z:object.position.z}, 0.1);
+            // glideToPosition(object, {x:0, y:0-objectDim.y, z:object.position.z}, 0.1);
+        }
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
         window.addEventListener('pointermove', onPointerMove);
         var moveBack = false;
         window.addEventListener('mouseout', () => { moveBack = true; })
         window.addEventListener('mouseover', () => { moveBack = false; })
-
-        window.addEventListener('resize', () => {
-            window.location.reload();
+        window.addEventListener('resize', () => { window.location.reload(); });
+        const target = new THREE.Object3D();
+        const intersectionPoint = new THREE.Vector3();
+        const planeNormal = new THREE.Vector3();
+        const plane = new THREE.Plane();
+        const mousePosition = new THREE.Vector2();
+        window.addEventListener('mousemove', (event) => {
+            mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            planeNormal.copy(camera.position).normalize();
+            plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);
+            raycaster.setFromCamera(mousePosition, camera);
+            raycaster.ray.intersectPlane(plane, intersectionPoint);
+            target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
         });
 
         const fontLoader = new FontLoader();
         const gltfLoader = new GLTFLoader();
-
 
         // functions
         function onPointerMove(event) {
@@ -83,75 +127,229 @@ export default function Home() {
             object.position.z += direction.z;
         }
 
+        let headerPosition = new THREE.Vector3();
 
         // scene object initialization
-        let text;
+        let nameText;
+        let nameTextDim;
+        let nameTextBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
         fontLoader.load( "/fonts/helvetiker_regular.typeface.json", function (font) {
             const textGeo = new TextGeometry( "Shawn Pana", {
                 font: font,
                 size: 0.5,
-                height: 0.01,
+                depth: 0.01,
             } );  
             const textMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
             const mesh = new THREE.Mesh( textGeo, textMaterial );
-            mesh.position.set( 4.5, 0, 2 );
-            mesh.rotation.y = Math.PI/2;
             scene.add( mesh );
-            text = mesh;
+            nameText = mesh;
+            textGeo.computeBoundingBox();
+            // console.log(textGeo.boundingBox)
+            // console.log(textGeo.boundingBox.min)
+            // console.log(textGeo.boundingBox.max)
+
+            const nameTextBBHelper = new THREE.Box3Helper(nameTextBB, 0xff0000);
+            scene.add(nameTextBBHelper);
+            nameTextBBHelper.visible = false;
+
+            nameTextDim = new THREE.Box3(textGeo.boundingBox.min, textGeo.boundingBox.max)
+            console.log(nameTextDim.min, nameTextDim.max)
+
+            var min = new THREE.Vector2();
+            var max = new THREE.Vector2();
+            camera.getViewBounds(Math.abs(nameText.position.z - camera.position.z), min, max) 
+            headerPosition.x = min.x;
+            headerPosition.y = max.y - nameTextDim.max.y;
+            headerPosition.z = nameText.position.z;
+
+            mesh.position.set(headerPosition.x, headerPosition.y, headerPosition.z);
         });
+        if (nameText){
+            nameText.position.x = headerPosition.x
+            nameText.position.y = headerPosition.y
+            nameText.position.z = nameText.position.z
+        }
+        // var nameTextBB = new BoundingBoxHelper(nameText, 0xff0000);
+
+
+    
+
+        // cycle through titles
+        const titles = ["Software Engineer", "Web Developer", "Musician", "3D Artist", "Lover", "Philosopher", "Creator", "Innovator", "Dreamer", "Educator", "2nd Year Undergraduate", "Student at UC San Diego", "Seeking Internship Opportunities"];
+        let currentTitle;
+        let titleText;
+        var titleTextBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        function loadTitle(){
+            fontLoader.load( "/fonts/helvetiker_regular.typeface.json", function (font) {
+                const textGeo = new TextGeometry( currentTitle, {
+                    font: font,
+                    size: 0.3,
+                    depth: 0.01,
+                } );  
+                const textMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+                const mesh = new THREE.Mesh( textGeo, textMaterial );
+                mesh.position.set(headerPosition.x, headerPosition.y, headerPosition.z);
+                scene.add( mesh );
+                titleText = mesh;
+
+                const titleTextBBHelper = new THREE.Box3Helper(titleTextBB, 0xff0000);
+                scene.add(titleTextBBHelper);
+                titleTextBBHelper.visible = false;
+            });
+        }
+        var index = 0;
+        currentTitle = titles[index]
+        titleText = loadTitle();
+        setInterval(() => {
+            scene.remove(titleText);
+            index = (index + 1) % titles.length;
+            currentTitle = titles[index];
+            titleText = loadTitle(currentTitle);
+        }, 1000);
+
+        const resumeOriginalPosition = {x:13, y:-0.5, z:-20};
+        var texture = new THREE.TextureLoader().load('/textures/resume.png');
+        var geometry = new THREE.BoxGeometry(8.5, 11, 0.1);
+        var material = new THREE.MeshBasicMaterial({ 
+            map: texture,
+            side: THREE.DoubleSide
+         });
+        var resume = new THREE.Mesh(geometry, material);
+        resume.position.set(resumeOriginalPosition.x, resumeOriginalPosition.y, resumeOriginalPosition.z);
+        scene.add(resume);
+
+        const handleClick = (event) => clickHandler(event, raycaster, pointer, camera, resume);
+        window.addEventListener('click', handleClick);
+
+        
 
         let loadedModel;
-        gltfLoader.load('/models/model.glb', (gltf) => {
+        let head;
+        // var modelOriginalPosition = {x:0, y:0, z:-150};
+        var modelOriginalPosition = {x:0, y:-1.5, z:7};
+        let loadedModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        gltfLoader.load('/models/shawnfullbodyglb.glb', (gltf) => {
             loadedModel = gltf.scene;
-            loadedModel.position.set(0, -5, 0);
+            loadedModel.position.set(modelOriginalPosition.x, modelOriginalPosition.y, modelOriginalPosition.z);
             scene.add(loadedModel);
+
+            const loadedModelBBHelper = new THREE.Box3Helper(loadedModelBB, 0xff0000);
+            scene.add(loadedModelBBHelper);
+            loadedModelBBHelper.visible = false;
+
+            gltf.scene.getObjectByName('forearm.L').rotation.x += Math.PI * .5;
         });
 
+        const heartOriginalPosition = {x:-5, y:0, z:0};
+        let heartModel;
+        let heartModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        gltfLoader.load('/models/realistic_human_heart.glb', (gltf) => {
+            heartModel = gltf.scene;
+            heartModel.position.set(heartOriginalPosition.x, heartOriginalPosition.y, heartOriginalPosition.z);
+            scene.add(heartModel);
+
+            const heartModelBBHelper = new THREE.Box3Helper(heartModelBB, 0xff0000);
+            scene.add(heartModelBBHelper);
+            heartModelBBHelper.visible = false;
+        });
 
         // animation
         const sensitivity = 9.5;
         var animate = function () {
             requestAnimationFrame(animate);
+            const t = clock.getElapsedTime();
             raycaster.setFromCamera(pointer, camera);
             camera.lookAt(scene.position);
-
             if (loadedModel) {
                 if (moveBack) {
-                    loadedModel.rotation.y = Math.abs(loadedModel.rotation.y) < 0.01 ? 0 : loadedModel.rotation.y * 0.1;
-                    loadedModel.rotation.z = Math.abs(loadedModel.rotation.z) < 0.01 ? 0 : loadedModel.rotation.z * 0.1;
-                    glideToPosition(loadedModel, {x:2, y:loadedModel.position.y, z:loadedModel.position.z}, 1.5);
+                    // loadedModel.lookAt({x:-2, y:0, z:6});
+                    loadedModel.position.x = 0
+                    loadedModel.position.y = -1
+                    loadedModel.position.x += Math.sin(t) * 0.5;
+                    loadedModel.position.y += Math.cos(t) * 0.5;
+                    // loadedModel.position.z += Math.sin(t) * 0.1;
 
-                    // shake the model
-                    loadedModel.position.x = 2 + Math.random()*0.1;
-                    loadedModel.position.y = -5 + Math.random()*0.1;
-                    loadedModel.position.z = Math.random()*0.1;
                 }
                 else{
-                    if (loadedModel.position.x > 0) {
-                        loadedModel.position.x = loadedModel.position.x * 0.35;
-                        loadedModel.rotation.y = loadedModel.rotation.y * 0.5;
-                        loadedModel.rotation.z = loadedModel.rotation.z * 0.5;
+                    if (raycaster.intersectObject(resume).length > 0){
+                        glideToPosition(loadedModel, {x:modelOriginalPosition.x+1, y:modelOriginalPosition.y, z:modelOriginalPosition.z}, 0.5);
+                        loadedModel.lookAt(resume.position);
                     }
-                    loadedModel.rotation.y = pointer.x * (window.innerWidth / window.innerHeight) * (1/distance(camera, loadedModel)) * sensitivity/(window.innerWidth / window.innerHeight);
-                    loadedModel.rotation.z = pointer.y * (window.innerHeight / window.innerWidth) * (1/distance(camera, loadedModel)) * sensitivity;
+                    else{
+                        glideToPosition(loadedModel, modelOriginalPosition, 1.5);
+                    }
                     moveBack = false;
+                    loadedModel.lookAt(target.position);
                 }
+                loadedModelBB.setFromObject(loadedModel);
             }
-            if ( text ) {
-                if (moveBack){
-                    glideToPosition(text, {x:6, y:0, z:2}, 1.5);
-                }
-                else{
-                    glideToPosition(text, {x:-5, y: 4.5, z: 8}, 1.5);
-                }
+            if ( nameText ) {
+                var min = new THREE.Vector2();
+                var max = new THREE.Vector2();
+                camera.getViewBounds(Math.abs(nameText.position.z - camera.position.z), min, max)     
+                // if (moveBack){
+                //     // KeepWithinView(nameText, nameTextDim, camera);
+                //     glideToPosition(nameText, {x:min.x, y:max.y-nameTextDim.y, z:nameText.position.z}, 0.1);
+                // }
+                // else{
+                //     // glideToPosition(nameText, headerPosition, 1.5);
+                //     glideToPosition(nameText, {x:min.x, y:max.y-nameTextDim.y, z:nameText.position.z}, 0.1);
+                // }
+                // // nameTextBB.setFromObject(nameText);
+                nameTextBB.setFromObject(nameText);
             }
             renderer.render(scene, camera);
+            if (titleText){
+                // titleTextBB.setFromObject(titleText);
+                if (titleTextBB.intersectsBox(nameTextBB)){
+                    titleText.position.y -= 0.1;
+                }
+                // if (moveBack) {
+                //     glideToPosition(titleText, headerPosition, 1);
+                // }
+                titleTextBB.setFromObject(titleText);
+            };
+
+            if (resume){
+                if (moveBack){
+                    glideToPosition(resume, resumeOriginalPosition, 0.5);
+                    resume.rotation.y += 0.01;
+                }
+                if (raycaster.intersectObject(resume).length > 0){
+                    glideToPosition(resume, {x: resumeOriginalPosition.x-2, y: resumeOriginalPosition.y, z: resumeOriginalPosition.z+2}, 0.5);
+                    resume.lookAt(camera.position);
+                }
+                else{
+                    glideToPosition(resume, resumeOriginalPosition, 0.5);
+                    if (loadedModel){
+                        glideToPosition(loadedModel, modelOriginalPosition, 0.5);
+                    }
+                    resume.rotation.y = t;
+                    resume.position.y = Math.sin(t)*0.5;
+                }
+
+            }
+            if (heartModel){
+                heartModel.rotation.y = t;
+                heartModel.position.y = Math.sin(t)*0.1;
+            }
         };
         animate();
 
+        return () => {
+            window.removeEventListener('click', handleClick);
+        };
+
     }, []);
 
-    return (
-        <div ref={refContainer}></div>
-    )
+    if (!isMobile){
+        return (
+            <div ref={refContainer}></div>
+        )
+    }
+    else{
+        return (
+            <Lanyard />
+        )
+    }
 }
