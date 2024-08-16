@@ -15,20 +15,20 @@ export default function App() {
         })
     }, [])
 
-    if (!isMobile) {
-        return (
-            <Home />
-        )
-    }
-    else{
-        return (
-            <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
-                <Physics debug interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
-                <Band />
-                </Physics>
-            </Canvas>
-        )
-    }
+    // if (!isMobile) {
+    //     return (
+    //         <Home />
+    //     )
+    // }
+    // else{
+    return (
+        <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
+            <Physics debug interpolate gravity={[0, -40, 0]} timeStep={1 / 60}>
+            <Band />
+            </Physics>
+        </Canvas>
+    )
+    // }
 }
 
 function Band() {

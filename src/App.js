@@ -6,11 +6,7 @@ import SentimentAnalysis from './components/Sentiment';
 
 function App() {
   return (
-    <div>
-      <Home />
-      {/* <SentimentAnalysis /> */}
-    </div>
-
+    <Home />
   );
 }
 
