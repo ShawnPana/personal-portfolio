@@ -1,11 +1,10 @@
 import * as THREE from 'three';
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { isMobile } from 'react-device-detect';
 import Lanyard from './Mobile'
-import { click } from '@testing-library/user-event/dist/click';
 
 export default function Home() {
     const refContainer = useRef(null);
@@ -22,8 +21,13 @@ export default function Home() {
             else if (object.name === "heart"){
                 window.open('https://organregistry.org/', '_blank');
             }
+            else if (object.name === "linkedin"){
+                window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+            }
+            else if (object.name === "instagram"){
+                window.open('https://www.instagram.com/shawnpana/', '_blank');
+            }
         }
-
     };
 
     useEffect(() => {
@@ -59,6 +63,7 @@ export default function Home() {
             raycaster.ray.intersectPlane(plane, intersectionPoint);
             target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
         });
+
         const fontLoader = new FontLoader();
         const gltfLoader = new GLTFLoader();
 
@@ -101,26 +106,56 @@ export default function Home() {
             object.position.y += direction.y;
             object.position.z += direction.z;
         }
+        function calculateBounds(z, camera){
+            var min = new THREE.Vector2();
+            var max = new THREE.Vector2();
+            camera.getViewBounds(Math.abs(z - camera.position.z), min, max) 
+            return {min, max};
+        }
 
 
         // scene object initialization
+        let loadedModel;
+        var modelOriginalPosition = {x:0, y:-1.5, z:7};
+        let loadedModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        gltfLoader.load('/models/shawnfullbodyglb.glb', (gltf) => {
+            loadedModel = gltf.scene;
+            loadedModel.position.set(modelOriginalPosition.x, modelOriginalPosition.y, modelOriginalPosition.z);
+            scene.add(loadedModel);
+
+            const loadedModelBBHelper = new THREE.Box3Helper(loadedModelBB, 0xff0000);
+            scene.add(loadedModelBBHelper);
+            loadedModelBBHelper.visible = false;
+
+
+            // loadedModel.traverse((child) => {
+            //     if (child.isBone) {
+            //         console.log(child.name);
+            //     }
+            // });
+        });
+        if (loadedModel){
+            frontObjectsPosition = loadedModel.position.z + 1
+        }
+
         let headerPosition = new THREE.Vector3();
         let nameText;
-        let nameTextDim;
+        let nameTextDim = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
         let nameTextBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        var headerSize = 0.5;
+        if (isMobile){
+            headerSize = 0.4;
+        }
         fontLoader.load( "/fonts/helvetiker_regular.typeface.json", function (font) {
             const textGeo = new TextGeometry( "Shawn Pana", {
                 font: font,
-                size: 0.5,
+                size: headerSize,
                 depth: 0.01,
             } );  
             const textMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
             const mesh = new THREE.Mesh( textGeo, textMaterial );
             scene.add( mesh );
             nameText = mesh;
-            // console.log(textGeo.boundingBox)
-            // console.log(textGeo.boundingBox.min)
-            // console.log(textGeo.boundingBox.max)
 
             const nameTextBBHelper = new THREE.Box3Helper(nameTextBB, 0xff0000);
             scene.add(nameTextBBHelper);
@@ -128,7 +163,6 @@ export default function Home() {
 
             textGeo.computeBoundingBox();
             nameTextDim = new THREE.Box3(textGeo.boundingBox.min, textGeo.boundingBox.max)
-            // console.log(nameTextDim.min, nameTextDim.max)
 
             var min = new THREE.Vector2();
             var max = new THREE.Vector2();
@@ -136,6 +170,9 @@ export default function Home() {
             headerPosition.x = min.x;
             headerPosition.y = max.y - nameTextDim.max.y;
             headerPosition.z = nameText.position.z;
+
+            console.log(nameTextDim.max.x);
+            console.log(max.x-min.x);
 
             mesh.position.set(headerPosition.x, headerPosition.y, headerPosition.z);
         });
@@ -145,9 +182,13 @@ export default function Home() {
             nameText.position.z = nameText.position.z
         }
 
-        const resumeOriginalPosition = {x:13, y:-0.5, z:-20};
+        var frontObjectsPosition = 0;
+
+        const resumeBounds = calculateBounds(frontObjectsPosition, camera);
+        const resumeOriginalPosition = {x:resumeBounds.min.x, y:resumeBounds.min.y, z:frontObjectsPosition};
         var texture = new THREE.TextureLoader().load('/textures/resume.png');
-        var geometry = new THREE.BoxGeometry(8.5, 11, 0.1);
+        const x = 11/1.6
+        var geometry = new THREE.BoxGeometry(8.5/x, 11/x, 0.1/x);
         var material = new THREE.MeshBasicMaterial({ 
             map: texture,
             side: THREE.DoubleSide
@@ -156,9 +197,60 @@ export default function Home() {
         resume.position.set(resumeOriginalPosition.x, resumeOriginalPosition.y, resumeOriginalPosition.z);
         scene.add(resume);
         resume.name = 'resume';
-
         const clickResume = (event) => clickHandler(event, raycaster, pointer, camera, resume);
         window.addEventListener('click', clickResume);
+
+
+        const linkedinBounds = calculateBounds(frontObjectsPosition, camera);
+        const linkedinOriginalPosition = {x:linkedinBounds.min.x, y:linkedinBounds.min.y, z:frontObjectsPosition};
+        var texture = new THREE.TextureLoader().load('/textures/linkedin.png');
+        var geometry = new THREE.BoxGeometry(1, 1, 0.1);
+        var material = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.DoubleSide
+        });
+        var linkedin = new THREE.Mesh(geometry, material);
+        linkedin.position.set(linkedinOriginalPosition.x, linkedinOriginalPosition.y, linkedinOriginalPosition.z);
+        scene.add(linkedin);
+        linkedin.name = 'linkedin';
+        const clickLinkedin = (event) => clickHandler(event, raycaster, pointer, camera, linkedin);
+        window.addEventListener('click', clickLinkedin);
+        
+        // icons
+        const instagramBounds = calculateBounds(frontObjectsPosition, camera);
+        const instagramOriginalPosition = {x:instagramBounds.min.x, y:instagramBounds.min.y, z:frontObjectsPosition};
+        var texture = new THREE.TextureLoader().load('/textures/instagram.png');
+        var geometry = new THREE.BoxGeometry(1, 1, 0.1);
+        var material = new THREE.MeshBasicMaterial({
+            // color: 0x000000,
+            map: texture,
+            side: THREE.DoubleSide
+        });
+        var instagram = new THREE.Mesh(geometry, material);
+        instagram.position.set(instagramOriginalPosition.x, instagramOriginalPosition.y, instagramOriginalPosition.z);
+        scene.add(instagram);
+        instagram.name = 'instagram';
+        const clickInstagram = (event) => clickHandler(event, raycaster, pointer, camera, instagram);
+        window.addEventListener('click', clickInstagram);
+
+        const heartBounds = calculateBounds(frontObjectsPosition, camera);
+        const heartOriginalPosition = {x:heartBounds.min.x, y:heartBounds.min.y, z:frontObjectsPosition};
+        let heartModel;
+        let heartModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        gltfLoader.load('/models/realistic_human_heart.glb', (gltf) => {
+            heartModel = gltf.scene;
+            heartModel.position.set(heartOriginalPosition.x, heartOriginalPosition.y, heartOriginalPosition.z);
+            scene.add(heartModel); 
+
+            const heartModelBBHelper = new THREE.Box3Helper(heartModelBB, 0xff0000);
+            scene.add(heartModelBBHelper);
+            heartModelBBHelper.visible = false;
+
+            heartModel.name = 'heart';
+        });
+        const clickHeart = (event) => clickHandler(event, raycaster, pointer, camera, heartModel);
+        window.addEventListener('click', clickHeart);
+        // TODO: add a function to handle the generation of icons(?)
 
 
         // cycle through titles
@@ -170,7 +262,7 @@ export default function Home() {
             fontLoader.load( "/fonts/helvetiker_regular.typeface.json", function (font) {
                 const textGeo = new TextGeometry( currentTitle, {
                     font: font,
-                    size: 0.3,
+                    size: headerSize/2,
                     depth: 0.01,
                 } );  
                 const textMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
@@ -193,41 +285,80 @@ export default function Home() {
             currentTitle = titles[index];
             titleText = loadTitle(currentTitle);
         }, 1000);
+        // probably the most questionable think I've done in this project
 
 
-        let loadedModel;
-        let head;
-        var modelOriginalPosition = {x:0, y:-1.5, z:7};
-        let loadedModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-        gltfLoader.load('/models/shawnfullbodyglb.glb', (gltf) => {
-            loadedModel = gltf.scene;
-            loadedModel.position.set(modelOriginalPosition.x, modelOriginalPosition.y, modelOriginalPosition.z);
-            scene.add(loadedModel);
+        // fucking around with async/await
+        function resolveAfter2Seconds() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve('poop');
+                }, 2000);
+            });
+        }
+        async function asyncCall() {
+            console.log('calling');
+            const result = await resolveAfter2Seconds();
+            console.log(result);
+        // Expected output: "resolved"  
+        }
+        asyncCall();     
 
-            const loadedModelBBHelper = new THREE.Box3Helper(loadedModelBB, 0xff0000);
-            scene.add(loadedModelBBHelper);
-            loadedModelBBHelper.visible = false;
 
-            gltf.scene.getObjectByName('forearm.L').rotation.x += Math.PI * .5;
-        });
+        // handle mobile/desktop scrolling
+        let startY = 0;
+        let currentY = 0;
+        if (isMobile){
+            window.addEventListener('touchstart', function(e) {
+                startY = e.touches[0].clientY;
+            });
+            window.addEventListener('touchmove', function(e) {
+                currentY = e.touches[0].clientY;
+                let deltaY = startY - currentY;
 
+                camera.position.y -= deltaY/100 * 0.1;
+                // loadedModel.position.z += deltaY/100 * 0.005;
+                // loadedModel.position.y -= deltaY/100 * 0.005;
 
-        const heartOriginalPosition = {x:-5, y:0, z:0};
-        let heartModel;
-        let heartModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-        gltfLoader.load('/models/realistic_human_heart.glb', (gltf) => {
-            heartModel = gltf.scene;
-            heartModel.position.set(heartOriginalPosition.x, heartOriginalPosition.y, heartOriginalPosition.z);
-            scene.add(heartModel);
+                if (camera.position.y > 0) {
+                    camera.position.y = 0;
+                } else if (camera.position.y < -2) {
+                    camera.position.y = -2;
+                }
 
-            const heartModelBBHelper = new THREE.Box3Helper(heartModelBB, 0xff0000);
-            scene.add(heartModelBBHelper);
-            heartModelBBHelper.visible = false;
+                // if (loadedModel.position.z > modelOriginalPosition.z) {
+                //     loadedModel.position.z = modelOriginalPosition.z;
+                // }
+                // else if (loadedModel.position.z < -2) {
+                //     loadedModel.position.z = -2;
+                // }
 
-            heartModel.name = 'heart';
-        });
-        const clickHeart = (event) => clickHandler(event, raycaster, pointer, camera, heartModel);
-        window.addEventListener('click', clickHeart);
+                // if (loadedModel.position.y > modelOriginalPosition.y) {
+                //     loadedModel.position.y = modelOriginalPosition.y;
+                // }
+                // else if (loadedModel.position.y < -5) {
+                //     loadedModel.position.y = -5;
+                // }
+
+                // Update startY for continuous movement
+                startY = currentY;
+            });
+            window.addEventListener('touchend', function() {
+                startY = 0;
+                currentY = 0;
+            });
+        }
+        else{
+            window.addEventListener('mousewheel', function(e){
+                camera.position.y += e.deltaY/100 * 0.1;
+                if (camera.position.y > 0){
+                    camera.position.y = 0;
+                }
+                else if (camera.position.y < -2){
+                    camera.position.y = -2;
+                }
+            });
+        }
 
 
         // animation
@@ -236,29 +367,10 @@ export default function Home() {
             requestAnimationFrame(animate);
             const t = clock.getElapsedTime();
             raycaster.setFromCamera(pointer, camera);
-            camera.lookAt(scene.position);
-            
-            if (loadedModel) {
-                if (moveBack) {
-                    // loadedModel.lookAt({x:-2, y:0, z:6});
-                    loadedModel.position.x = 0
-                    loadedModel.position.y = -1
-                    loadedModel.position.x += Math.sin(t) * 0.5;
-                    loadedModel.position.y += Math.cos(t) * 0.5;
-                    // loadedModel.position.z += Math.sin(t) * 0.1;
 
-                }
-                else{
-                    if (raycaster.intersectObject(resume).length > 0){
-                        glideToPosition(loadedModel, {x:modelOriginalPosition.x+1, y:modelOriginalPosition.y, z:modelOriginalPosition.z}, 0.5);
-                        loadedModel.lookAt(resume.position);
-                    }
-                    else{
-                        glideToPosition(loadedModel, modelOriginalPosition, 1.5);
-                    }
-                    moveBack = false;
-                    loadedModel.lookAt(target.position);
-                }
+            if (loadedModel) {
+                loadedModel.getObjectByName('spine005').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
+                loadedModel.getObjectByName('spine006').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
                 loadedModelBB.setFromObject(loadedModel);
             }
 
@@ -267,44 +379,43 @@ export default function Home() {
             }
 
             if (titleText){
-                // titleTextBB.setFromObject(titleText);
                 if (titleTextBB.intersectsBox(nameTextBB)){
                     titleText.position.y -= 0.1;
                 }
-                // if (moveBack) {
-                //     glideToPosition(titleText, headerPosition, 1);
-                // }
                 titleTextBB.setFromObject(titleText);
             }
 
             if (resume){
-                if (moveBack){
-                    glideToPosition(resume, resumeOriginalPosition, 0.5);
-                    resume.rotation.y += 0.01;
-                }
                 if (raycaster.intersectObject(resume).length > 0){
-                    glideToPosition(resume, {x: resumeOriginalPosition.x-2, y: resumeOriginalPosition.y, z: resumeOriginalPosition.z+2}, 0.5);
-                    resume.lookAt(camera.position);
+                    console.log('intersecting');
                 }
                 else{
                     glideToPosition(resume, resumeOriginalPosition, 0.5);
-                    if (loadedModel){
-                        glideToPosition(loadedModel, modelOriginalPosition, 0.5);
-                    }
-                    resume.rotation.y = t;
-                    resume.position.y = Math.sin(t)*0.5;
                 }
-                // camera.getViewBounds(Math.abs(resume.position.z - camera.position.z), min, max)
 
+                resume.position.x = resumeBounds.max.x/2;
+                resume.position.y = 0;
 
-
+                resume.rotation.y = t;
+                
             }
-
             if (heartModel){
+                heartModel.position.x = heartBounds.min.x/2;
+                heartModel.position.y = 0;
+
                 heartModel.rotation.y = t;
-                heartModel.position.y = Math.sin(t)*0.1;
+                heartModelBB.setFromObject(heartModel);
             }
 
+            // TODO: figure out icon positioning
+            if (linkedin){
+                linkedin.position.x = headerPosition.x + nameTextDim.max.x - 1;
+                linkedin.position.y = headerPosition.y - 1;
+            }
+            if (instagram){
+                instagram.position.x = headerPosition.x + nameTextDim.max.x;
+                instagram.position.y = headerPosition.y - 1;
+            }
             renderer.render(scene, camera);
         };
         animate();
@@ -312,18 +423,20 @@ export default function Home() {
         return () => {
             window.removeEventListener('click', clickResume);
             window.removeEventListener('click', clickHeart);
+            window.removeEventListener('click', clickLinkedin);
+            window.removeEventListener('click', clickInstagram);
         };
 
     }, []);
 
-    if (!isMobile){
+    // if (!isMobile){
         return (
             <div ref={refContainer}></div>
         )
-    }
-    else{
-        return (
-            <Lanyard />
-        )
-    }
+    // }
+    // else{
+    //     return (
+    //         <Lanyard />
+    //     )
+    // }
 }
