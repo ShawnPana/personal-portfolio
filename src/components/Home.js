@@ -316,70 +316,6 @@ export default function Home() {
         // handle mobile/desktop scrolling
         let startY = 0;
         let currentY = 0;
-        // if (isMobile){
-        //     window.addEventListener('touchstart', function(e) {
-        //         startY = e.touches[0].clientY;
-        //     });
-        //     window.addEventListener('touchmove', function(e) {
-        //         currentY = e.touches[0].clientY;
-        //         let deltaY = startY - currentY;
-
-        //         camera.position.y -= deltaY/100 * 0.1;
-        //         // loadedModel.position.z += deltaY/100 * 0.005;
-        //         // loadedModel.position.y -= deltaY/100 * 0.005;
-
-        //         if (camera.position.y > 0) {
-        //             camera.position.y = 0;
-        //         } else if (camera.position.y < -2) {
-        //             camera.position.y = -2;
-        //         }
-
-        //         // if (loadedModel.position.z > modelOriginalPosition.z) {
-        //         //     loadedModel.position.z = modelOriginalPosition.z;
-        //         // }
-        //         // else if (loadedModel.position.z < -2) {
-        //         //     loadedModel.position.z = -2;
-        //         // }
-
-        //         // if (loadedModel.position.y > modelOriginalPosition.y) {
-        //         //     loadedModel.position.y = modelOriginalPosition.y;
-        //         // }
-        //         // else if (loadedModel.position.y < -5) {
-        //         //     loadedModel.position.y = -5;
-        //         // }
-
-        //         // Update startY for continuous movement
-        //         startY = currentY;
-        //     });
-        //     window.addEventListener('touchend', function() {
-        //         startY = 0;
-        //         currentY = 0;
-        //     });
-        // }
-        // else{
-        //     window.addEventListener('mousewheel', function(e){
-        //         camera.position.y += e.deltaY/100 * 0.1;
-
-        //         loadedModel.translateY(e.deltaY/100 * 0.1);
-        //         loadedModel.translateX(e.deltaY/100 * 0.1);
-        //         // loadedModel.translateZ(e.deltaY/100 * 0.1);
-        //         // loadedModel.position.y += e.deltaY/100 * 0.1;
-        //         // loadedModel.position.x += e.deltaY/100 * 0.1;
-
-        //         if (loadedModel.position > modelOriginalPosition){
-        //             loadedModel.position = modelOriginalPosition;
-        //         }
-
-        //         if (camera.position.y > 0){
-        //             camera.position.y = 0;
-        //         }
-        //         else if (camera.position.y < -2){
-        //             camera.position.y = -2;
-        //         }
-
-        //     });
-        // }
-        // Define the scroll range and the model's target positions
         const scrollRange = 2; // The range of camera movement (from 0 to -2)
         const modelPositionTop = modelOriginalPosition; // Position when at the top
         const modelPositionBottom = { x: -1, y: -4, z: modelOriginalPosition.z + 1 }; // Position when scrolled all the way down
@@ -452,8 +388,12 @@ export default function Home() {
             raycaster.setFromCamera(pointer, camera);
 
             if (loadedModel) {
-                loadedModel.getObjectByName('spine005').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
-                loadedModel.getObjectByName('spine006').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
+
+                // loadedModel.getObjectByName('spine005').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
+                // loadedModel.getObjectByName('spine006').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
+
+                loadedModel.getObjectByName('spine005').lookAt(camera.position);
+                loadedModel.getObjectByName('spine006').lookAt(camera.position);
                 loadedModelBB.setFromObject(loadedModel);
             }
 
