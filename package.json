@@ -2,7 +2,6 @@
   "name": "fuckaroundwebsite",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://127.0.0.1:5000/dick",
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.14",
     "@react-three/drei": "^9.109.2",
