@@ -4,7 +4,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { isMobile } from 'react-device-detect';
-import Lanyard from './Mobile'
 
 export default function Home() {
     const refContainer = useRef(null);
@@ -24,9 +23,6 @@ export default function Home() {
             else if (object.name === "linkedin"){
                 window.open('https://www.linkedin.com/in/shawnpana', '_blank');
             }
-            else if (object.name === "instagram"){
-                window.open('https://www.instagram.com/shawnpana/', '_blank');
-            }
         }
     };
 
@@ -38,8 +34,11 @@ export default function Home() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         refContainer.current && refContainer.current.appendChild( renderer.domElement );
         var clock = new THREE.Clock();
-        const light = new THREE.AmbientLight( 0xffffff, 10 ); 
+        const light = new THREE.AmbientLight( 0xffffff, 3 ); 
         scene.add(light)
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
+        directionalLight.position.set(0, 2, -2);
+        scene.add(directionalLight);
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 10;
         const raycaster = new THREE.Raycaster();
@@ -123,18 +122,19 @@ export default function Home() {
         // scene.add( sky );
 
         // scene object initialization
+        const loadedModelBounds = calculateBounds(0, camera);
+        var modelOriginalPosition = {x:0, y:-10, z:-2};
         let loadedModel;
-        var modelOriginalPosition = {x:0, y:-1.5, z:7};
         let loadedModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
         gltfLoader.load('/models/shawnfullbodyglb.glb', (gltf) => {
             loadedModel = gltf.scene;
-            loadedModel.position.set(modelOriginalPosition.x, modelOriginalPosition.y, modelOriginalPosition.z);
             scene.add(loadedModel);
+            loadedModel.scale.set(6, 6, 6);
+            loadedModel.position.set(modelOriginalPosition.x, modelOriginalPosition.y, modelOriginalPosition.z);
 
             const loadedModelBBHelper = new THREE.Box3Helper(loadedModelBB, 0xff0000);
             scene.add(loadedModelBBHelper);
             loadedModelBBHelper.visible = false;
-
 
             // loadedModel.traverse((child) => {
             //     if (child.isBone) {
@@ -145,6 +145,15 @@ export default function Home() {
         if (loadedModel){
             frontObjectsPosition = loadedModel.position.z + 1
         }
+
+        // let liminalSpace;
+        // gltfLoader.load('/models/a_liminal_space.glb', (gltf) => {
+        //     liminalSpace = gltf.scene;
+        //     scene.add(liminalSpace);
+        //     liminalSpace.scale.set(10, 10, 10);
+        //     liminalSpace.position.set(0, -13, 0);
+        // });
+
 
         let headerPosition = new THREE.Vector3();
         let nameText;
@@ -196,7 +205,14 @@ export default function Home() {
         const resumeOriginalPosition = {x:resumeBounds.min.x, y:resumeBounds.min.y, z:frontObjectsPosition};
         var texture = new THREE.TextureLoader().load('/textures/resume.png');
         const x = 11/1.6
-        var geometry = new THREE.BoxGeometry(8.5/x, 11/x, 0.1/x);
+        let scale;
+        if (isMobile){
+            scale = 1;
+        }
+        else{
+            scale = 2;
+        }
+        var geometry = new THREE.BoxGeometry(scale*8.5/x, scale*11/x, scale*0.1/x);
         var material = new THREE.MeshBasicMaterial({ 
             map: texture,
             side: THREE.DoubleSide
@@ -208,38 +224,23 @@ export default function Home() {
         const clickResume = (event) => clickHandler(event, raycaster, pointer, camera, resume);
         window.addEventListener('click', clickResume);
 
-
         const linkedinBounds = calculateBounds(frontObjectsPosition, camera);
         const linkedinOriginalPosition = {x:linkedinBounds.min.x, y:linkedinBounds.min.y, z:frontObjectsPosition};
-        var texture = new THREE.TextureLoader().load('/textures/linkedin.png');
-        var geometry = new THREE.BoxGeometry(1, 1, 0.1);
-        var material = new THREE.MeshBasicMaterial({
-            map: texture,
-            side: THREE.DoubleSide
+        let linkedin;
+        let linkedinModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+        gltfLoader.load('/models/linkedin_3d.glb', (gltf) => {
+            linkedin = gltf.scene;
+            linkedin.position.set(linkedinOriginalPosition.x, linkedinOriginalPosition.y, linkedinOriginalPosition.z);
+            scene.add(linkedin); 
+
+            const linkedinModelBBHelper = new THREE.Box3Helper(linkedinModelBB, 0xff0000);
+            scene.add(linkedinModelBBHelper);
+            linkedinModelBBHelper.visible = false;
+
+            linkedin.name = 'linkedin';
         });
-        var linkedin = new THREE.Mesh(geometry, material);
-        linkedin.position.set(linkedinOriginalPosition.x, linkedinOriginalPosition.y, linkedinOriginalPosition.z);
-        scene.add(linkedin);
-        linkedin.name = 'linkedin';
         const clickLinkedin = (event) => clickHandler(event, raycaster, pointer, camera, linkedin);
         window.addEventListener('click', clickLinkedin);
-        
-        // icons
-        const instagramBounds = calculateBounds(frontObjectsPosition, camera);
-        const instagramOriginalPosition = {x:instagramBounds.min.x, y:instagramBounds.min.y, z:frontObjectsPosition};
-        var texture = new THREE.TextureLoader().load('/textures/instagram.png');
-        var geometry = new THREE.BoxGeometry(1, 1, 0.1);
-        var material = new THREE.MeshBasicMaterial({
-            // color: 0x000000,
-            map: texture,
-            side: THREE.DoubleSide
-        });
-        var instagram = new THREE.Mesh(geometry, material);
-        instagram.position.set(instagramOriginalPosition.x, instagramOriginalPosition.y, instagramOriginalPosition.z);
-        scene.add(instagram);
-        instagram.name = 'instagram';
-        const clickInstagram = (event) => clickHandler(event, raycaster, pointer, camera, instagram);
-        window.addEventListener('click', clickInstagram);
 
         const heartBounds = calculateBounds(frontObjectsPosition, camera);
         const heartOriginalPosition = {x:heartBounds.min.x, y:heartBounds.min.y, z:frontObjectsPosition};
@@ -314,71 +315,67 @@ export default function Home() {
 
 
         // handle mobile/desktop scrolling
-        let startY = 0;
-        let currentY = 0;
-        const scrollRange = 2; // The range of camera movement (from 0 to -2)
-        const modelPositionTop = modelOriginalPosition; // Position when at the top
-        const modelPositionBottom = { x: -1, y: -4, z: modelOriginalPosition.z + 1 }; // Position when scrolled all the way down
+        // let startY = 0;
+        // let currentY = 0;
+        // const scrollRange = 2; // The range of camera movement (from 0 to -2)
+        // const modelPositionTop = modelOriginalPosition; // Position when at the top
+        // const modelPositionBottom = { x: -1, y: -4, z: modelOriginalPosition.z + 1 }; // Position when scrolled all the way down
+        // if (isMobile) {
+        //     window.addEventListener('touchstart', function(e) {
+        //         startY = e.touches[0].clientY;
+        //     });
 
-        if (isMobile) {
-            window.addEventListener('touchstart', function(e) {
-                startY = e.touches[0].clientY;
-            });
+        //     window.addEventListener('touchmove', function(e) {
+        //         currentY = e.touches[0].clientY;
+        //         let deltaY = startY - currentY;
 
-            window.addEventListener('touchmove', function(e) {
-                currentY = e.touches[0].clientY;
-                let deltaY = startY - currentY;
+        //         // Update camera position
+        //         camera.position.y -= deltaY / 100 * 0.1;
 
-                // Update camera position
-                camera.position.y -= deltaY / 100 * 0.1;
+        //         // Clamp the camera position
+        //         if (camera.position.y > 0) {
+        //             camera.position.y = 0;
+        //         } else if (camera.position.y < -scrollRange) {
+        //             camera.position.y = -scrollRange;
+        //         }
 
-                // Clamp the camera position
-                if (camera.position.y > 0) {
-                    camera.position.y = 0;
-                } else if (camera.position.y < -scrollRange) {
-                    camera.position.y = -scrollRange;
-                }
+        //         // Calculate the scroll ratio (0 at top, 1 at bottom)
+        //         let scrollRatio = (camera.position.y - 0) / -scrollRange;
 
-                // Calculate the scroll ratio (0 at top, 1 at bottom)
-                let scrollRatio = (camera.position.y - 0) / -scrollRange;
+        //         // Interpolate the model's position based on the scroll ratio
+        //         loadedModel.position.x = modelPositionTop.x + scrollRatio * (modelPositionBottom.x - modelPositionTop.x);
+        //         loadedModel.position.y = modelPositionTop.y + scrollRatio * (modelPositionBottom.y - modelPositionTop.y);
+        //         loadedModel.position.z = modelPositionTop.z + scrollRatio * (modelPositionBottom.z - modelPositionTop.z);
 
-                // Interpolate the model's position based on the scroll ratio
-                loadedModel.position.x = modelPositionTop.x + scrollRatio * (modelPositionBottom.x - modelPositionTop.x);
-                loadedModel.position.y = modelPositionTop.y + scrollRatio * (modelPositionBottom.y - modelPositionTop.y);
-                loadedModel.position.z = modelPositionTop.z + scrollRatio * (modelPositionBottom.z - modelPositionTop.z);
+        //         // Update startY for continuous movement
+        //         startY = currentY;
+        //     });
 
-                // Update startY for continuous movement
-                startY = currentY;
-            });
+        //     window.addEventListener('touchend', function() {
+        //         startY = 0;
+        //         currentY = 0;
+        //     });
+        // } else {
+        //     window.addEventListener('mousewheel', function(e) {
+        //         // Update camera position
+        //         camera.position.y += e.deltaY / 100 * 0.1;
 
-            window.addEventListener('touchend', function() {
-                startY = 0;
-                currentY = 0;
-            });
-        } else {
-            window.addEventListener('mousewheel', function(e) {
-                // Update camera position
-                camera.position.y += e.deltaY / 100 * 0.1;
+        //         // Clamp the camera position
+        //         if (camera.position.y > 0) {
+        //             camera.position.y = 0;
+        //         } else if (camera.position.y < -scrollRange) {
+        //             camera.position.y = -scrollRange;
+        //         }
 
-                // Clamp the camera position
-                if (camera.position.y > 0) {
-                    camera.position.y = 0;
-                } else if (camera.position.y < -scrollRange) {
-                    camera.position.y = -scrollRange;
-                }
+        //         // Calculate the scroll ratio (0 at top, 1 at bottom)
+        //         let scrollRatio = (camera.position.y - 0) / -scrollRange;
 
-                // Calculate the scroll ratio (0 at top, 1 at bottom)
-                let scrollRatio = (camera.position.y - 0) / -scrollRange;
-
-                // Interpolate the model's position based on the scroll ratio
-                loadedModel.position.x = modelPositionTop.x + scrollRatio * (modelPositionBottom.x - modelPositionTop.x);
-                loadedModel.position.y = modelPositionTop.y + scrollRatio * (modelPositionBottom.y - modelPositionTop.y);
-                loadedModel.position.z = modelPositionTop.z + scrollRatio * (modelPositionBottom.z - modelPositionTop.z);
-            });
-        }
-
-
-
+        //         // Interpolate the model's position based on the scroll ratio
+        //         loadedModel.position.x = modelPositionTop.x + scrollRatio * (modelPositionBottom.x - modelPositionTop.x);
+        //         loadedModel.position.y = modelPositionTop.y + scrollRatio * (modelPositionBottom.y - modelPositionTop.y);
+        //         loadedModel.position.z = modelPositionTop.z + scrollRatio * (modelPositionBottom.z - modelPositionTop.z);
+        //     });
+        // }
 
         // animation
         const sensitivity = 9.5;
@@ -388,12 +385,19 @@ export default function Home() {
             raycaster.setFromCamera(pointer, camera);
 
             if (loadedModel) {
-
-                // loadedModel.getObjectByName('spine005').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
-                // loadedModel.getObjectByName('spine006').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
-
-                loadedModel.getObjectByName('spine005').lookAt(camera.position);
-                loadedModel.getObjectByName('spine006').lookAt(camera.position);
+                if(isMobile){
+                    loadedModel.rotation.y = Math.sin(t) * 0.1;
+                    loadedModel.getObjectByName('spine005').rotation.y = Math.sin(t) * 0.2;
+                    loadedModel.getObjectByName('spine006').rotation.y = Math.sin(t) * 0.2;
+                    loadedModel.getObjectByName('spine005').rotation.z = Math.sin(t) * 0.2;
+                    loadedModel.getObjectByName('spine006').rotation.z = Math.sin(t) * 0.2;
+                }
+                else{
+                    loadedModel.getObjectByName('spine005').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
+                    loadedModel.getObjectByName('spine006').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
+                }
+                // loadedModel.getObjectByName('spine005').lookAt(camera.position);
+                // loadedModel.getObjectByName('spine006').lookAt(camera.position);
                 loadedModelBB.setFromObject(loadedModel);
             }
 
@@ -409,6 +413,9 @@ export default function Home() {
             }
 
             if (resume){
+                // if(!isMobile){
+                //     resume.scale.set(2, 2, 2);
+                // }
                 if (raycaster.intersectObject(resume).length > 0){
                     console.log('intersecting');
                 }
@@ -423,6 +430,9 @@ export default function Home() {
                 
             }
             if (heartModel){
+                if (!isMobile){
+                    heartModel.scale.set(2, 2, 2);
+                }
                 heartModel.position.x = heartBounds.min.x/2;
                 heartModel.position.y = 0;
 
@@ -432,12 +442,13 @@ export default function Home() {
 
             // TODO: figure out icon positioning
             if (linkedin){
-                linkedin.position.x = headerPosition.x + nameTextDim.max.x - 1;
-                linkedin.position.y = headerPosition.y - 1;
-            }
-            if (instagram){
-                instagram.position.x = headerPosition.x + nameTextDim.max.x;
-                instagram.position.y = headerPosition.y - 1;
+                // calclate the bounds of the linkedin icon relative to the camera and set the position to the bottom right of the camera view
+                const widthOfLinkedIn = linkedinModelBB.max.x - linkedinModelBB.min.x;
+                linkedin.position.x = linkedinBounds.max.x - widthOfLinkedIn;
+                linkedin.position.y = linkedinBounds.min.y;
+                linkedin.position.z = frontObjectsPosition;
+                linkedinModelBB.setFromObject(linkedin);
+
             }
             renderer.render(scene, camera);
         };
@@ -447,7 +458,6 @@ export default function Home() {
             window.removeEventListener('click', clickResume);
             window.removeEventListener('click', clickHeart);
             window.removeEventListener('click', clickLinkedin);
-            window.removeEventListener('click', clickInstagram);
         };
 
     }, []);
