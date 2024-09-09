@@ -112,15 +112,6 @@ export default function Home() {
             return {min, max};
         }
 
-        // const skyGeometry = new THREE.SphereGeometry( 500, 60, 30 );
-        // // invert the geometry on the x-axis so that all of the faces point inward
-        // skyGeometry.scale( - 1, 1, 1 );
-        // const skyTexture = new THREE.TextureLoader().load( '/textures/2294472375_24a3b8ef46_o.jpg' );
-        // skyTexture.colorSpace = THREE.SRGBColorSpace;
-        // const skyMaterial = new THREE.MeshBasicMaterial( { map: skyTexture } );
-        // const sky = new THREE.Mesh( skyGeometry, skyMaterial );
-        // scene.add( sky );
-
         // scene object initialization
         const loadedModelBounds = calculateBounds(0, camera);
         var modelOriginalPosition = {x:0, y:-10, z:-2};
@@ -187,9 +178,6 @@ export default function Home() {
             headerPosition.x = min.x;
             headerPosition.y = max.y - nameTextDim.max.y;
             headerPosition.z = nameText.position.z;
-
-            console.log(nameTextDim.max.x);
-            console.log(max.x-min.x);
 
             mesh.position.set(headerPosition.x, headerPosition.y, headerPosition.z);
         });
@@ -294,8 +282,7 @@ export default function Home() {
             currentTitle = titles[index];
             titleText = loadTitle(currentTitle);
         }, 1000);
-        // probably the most questionable think I've done in this project
-
+        // probably the most questionable think I've done in this project   
 
         // fucking around with async/await
         function resolveAfter2Seconds() {
@@ -311,8 +298,7 @@ export default function Home() {
             console.log(result);
         // Expected output: "resolved"  
         }
-        asyncCall();     
-
+        asyncCall();
 
         // handle mobile/desktop scrolling
         // let startY = 0;
@@ -413,16 +399,6 @@ export default function Home() {
             }
 
             if (resume){
-                // if(!isMobile){
-                //     resume.scale.set(2, 2, 2);
-                // }
-                if (raycaster.intersectObject(resume).length > 0){
-                    console.log('intersecting');
-                }
-                else{
-                    glideToPosition(resume, resumeOriginalPosition, 0.5);
-                }
-
                 resume.position.x = resumeBounds.max.x/2;
                 resume.position.y = 0;
 
@@ -462,14 +438,7 @@ export default function Home() {
 
     }, []);
 
-    // if (!isMobile){
-        return (
-            <div ref={refContainer}></div>
-        )
-    // }
-    // else{
-    //     return (
-    //         <Lanyard />
-    //     )
-    // }
+    return (
+        <div ref={refContainer}></div>
+    )
 }
