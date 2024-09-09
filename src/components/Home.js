@@ -64,7 +64,25 @@ export default function Home() {
         });
 
         const fontLoader = new FontLoader();
-        const gltfLoader = new GLTFLoader();
+
+        const manager = new THREE.LoadingManager();
+        manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        manager.onLoad = function ( ) {
+            console.log( 'Loading complete!');
+        };
+
+        manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        manager.onError = function ( url ) {
+            console.log( 'There was an error loading ' + url );
+        };
+
+        const gltfLoader = new GLTFLoader(manager);
 
         // functions
         function onPointerMove(event) {
@@ -285,20 +303,20 @@ export default function Home() {
         // probably the most questionable think I've done in this project   
 
         // fucking around with async/await
-        function resolveAfter2Seconds() {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve('poop');
-                }, 2000);
-            });
-        }
-        async function asyncCall() {
-            console.log('calling');
-            const result = await resolveAfter2Seconds();
-            console.log(result);
-        // Expected output: "resolved"  
-        }
-        asyncCall();
+        // function resolveAfter2Seconds() {
+        //     return new Promise((resolve) => {
+        //         setTimeout(() => {
+        //             resolve('poop');
+        //         }, 2000);
+        //     });
+        // }
+        // async function asyncCall() {
+        //     console.log('calling');
+        //     const result = await resolveAfter2Seconds();
+        //     console.log(result);
+        // // Expected output: "resolved"  
+        // }
+        // asyncCall();
 
         // handle mobile/desktop scrolling
         // let startY = 0;
