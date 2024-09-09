@@ -146,13 +146,13 @@ export default function Home() {
             frontObjectsPosition = loadedModel.position.z + 1
         }
 
-        // let liminalSpace;
-        // gltfLoader.load('/models/a_liminal_space.glb', (gltf) => {
-        //     liminalSpace = gltf.scene;
-        //     scene.add(liminalSpace);
-        //     liminalSpace.scale.set(10, 10, 10);
-        //     liminalSpace.position.set(0, -13, 0);
-        // });
+        let liminalSpace;
+        gltfLoader.load('/models/a_liminal_space.glb', (gltf) => {
+            liminalSpace = gltf.scene;
+            scene.add(liminalSpace);
+            liminalSpace.scale.set(10, 10, 10);
+            liminalSpace.position.set(0, -13, 0);
+        });
 
 
         let headerPosition = new THREE.Vector3();
