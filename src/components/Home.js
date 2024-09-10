@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
@@ -9,10 +9,10 @@ import ReactGA from 'react-ga4';
 
 export default function Home() {
     const refContainer = useRef(null);
-    const [scene, setScene] = useState(null);
-    const [camera, setCamera] = useState(null);
-    const [raycaster] = useState(new THREE.Raycaster());
-    const [pointer] = useState(new THREE.Vector2());
+    // const [scene, setScene] = useState(null);
+    // const [camera, setCamera] = useState(null);
+    // const [raycaster] = useState(new THREE.Raycaster());
+    // const [pointer] = useState(new THREE.Vector2());
     const interactiveObjects = useRef([]);
 
     if (isMobile) {
@@ -128,11 +128,11 @@ export default function Home() {
         scene.add(directionalLight2);
 
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-        setCamera(camera);
+        // setCamera(camera);
         camera.position.z = 10;
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
-        var moveBack = false;
+        // var moveBack = false;
         const target = new THREE.Object3D();
         const intersectionPoint = new THREE.Vector3();
         const planeNormal = new THREE.Vector3();
@@ -167,8 +167,8 @@ export default function Home() {
         }
         else{
             window.addEventListener('pointermove', onPointerMove);
-            window.addEventListener('mouseout', () => { moveBack = true; })
-            window.addEventListener('mouseover', () => { moveBack = false; })
+            // window.addEventListener('mouseout', () => { moveBack = true; })
+            // window.addEventListener('mouseover', () => { moveBack = false; })
             window.addEventListener('mousemove', (event) => {
                 mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
                 mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -199,8 +199,10 @@ export default function Home() {
             return {min, max};
         }
 
+        var frontObjectsPosition = 0;
+
         // scene object initialization
-        const loadedModelBounds = calculateBounds(0, camera);
+        // const loadedModelBounds = calculateBounds(0, camera);
         var modelOriginalPosition = {x:0, y:-10, z:-2};
         let loadedModel;
         let loadedModelBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
@@ -275,10 +277,7 @@ export default function Home() {
         if (nameText){
             nameText.position.x = headerPosition.x
             nameText.position.y = headerPosition.y
-            nameText.position.z = nameText.position.z
         }
-
-        var frontObjectsPosition = 0;
 
         const resumeBounds = calculateBounds(frontObjectsPosition, camera);
         const resumeOriginalPosition = {x:resumeBounds.min.x, y:resumeBounds.min.y, z:frontObjectsPosition};
@@ -457,7 +456,7 @@ export default function Home() {
         // add everything to scene
 
         // animation
-        const sensitivity = 9.5;
+        // const sensitivity = 9.5;
         var animate = function () {
             requestAnimationFrame(animate);
             const t = clock.getElapsedTime();
