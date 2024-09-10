@@ -59,6 +59,13 @@ export default function Home() {
                         action: 'Viewed linkedin from computer'
                     });
                     break;
+                case "shawn":
+                    window.open('/music/song_4.mp3', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed Draped from computer'
+                    });
+                    break;
                 default:
                     console.log("No valid object clicked.");
                     break;
@@ -87,6 +94,13 @@ export default function Home() {
                 ReactGA.event({
                     category: 'User',
                     action: 'Viewed organregistry.org from mobile'
+                });
+                break;
+            case "shawn":
+                window.open('/music/song_4.mp3', '_blank');
+                ReactGA.event({
+                    category: 'User',
+                    action: 'Viewed Draped from mobile'
                 });
                 break;
             default:
@@ -200,12 +214,16 @@ export default function Home() {
             scene.add(loadedModelBBHelper);
             loadedModelBBHelper.visible = false;
 
+            loadedModel.name = 'shawn';
+
             // loadedModel.traverse((child) => {
             //     if (child.isBone) {
             //         console.log(child.name);
             //     }
             // });
         });
+        const clickShawn = (event) => clickHandler(event, raycaster, pointer, camera, loadedModel);
+        window.addEventListener('click', clickShawn);
         if (loadedModel){
             frontObjectsPosition = loadedModel.position.z + 1
         }
@@ -529,6 +547,7 @@ export default function Home() {
             window.removeEventListener('click', clickResume);
             window.removeEventListener('click', clickHeart);
             window.removeEventListener('click', clickLinkedin);
+            window.removeEventListener('click', clickShawn);
             hammer.off('pan', handlePan);
             hammer.off('tap', handleTap);
             hammer.destroy();
