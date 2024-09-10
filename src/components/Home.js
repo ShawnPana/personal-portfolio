@@ -4,9 +4,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { isMobile } from 'react-device-detect';
+import Hammer from 'hammerjs';
 
 export default function Home() {
     const refContainer = useRef(null);
+    const [scene, setScene] = useState(null);
+    const [camera, setCamera] = useState(null);
+    const [raycaster] = useState(new THREE.Raycaster());
+    const [pointer] = useState(new THREE.Vector2());
 
     // Click handler function defined outside of useEffect
     // const clickHandler = (event, raycaster, pointer, camera, object) => {
@@ -55,6 +60,37 @@ export default function Home() {
         }
     };
 
+    function handleObjectClick(object) {
+        switch (object.name) {
+            case "resume":
+                window.open('/textures/resume.png', '_blank');
+                break;
+            case "linkedin":
+                window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+                break;
+            case "heart":
+                window.open('https://organregistry.org/', '_blank');
+                break;
+            default:
+                console.log("No valid object clicked.");
+                break;
+        }
+    }
+    
+    function handlePan(event) {
+        // Update pointer position
+        pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
+        pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
+
+        // Update raycaster
+        raycaster.setFromCamera(pointer, camera);
+
+        // Optional: Update camera or other elements based on pan
+        // For example, rotate the camera:
+        // camera.rotation.y += event.deltaX * 0.01;
+        // camera.rotation.x += event.deltaY * 0.01;
+    }
+
     useEffect(() => {
         // scene setup
         document.body.style.overflow = 'hidden';
@@ -81,21 +117,33 @@ export default function Home() {
         const planeNormal = new THREE.Vector3();
         const plane = new THREE.Plane();
         const mousePosition = new THREE.Vector2();
-        if (isMobile) {
-            const updatePosition = (event) => {
-                const touch = event.touches[0] || event.changedTouches[0];
-                mousePosition.x = (touch.clientX / window.innerWidth) * 2 - 1;
-                mousePosition.y = -(touch.clientY / window.innerHeight) * 2 + 1;
-                planeNormal.copy(camera.position).normalize();
-                plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);
-                raycaster.setFromCamera(mousePosition, camera);
-                raycaster.ray.intersectPlane(plane, intersectionPoint);
-                target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
-            };
-            window.addEventListener('touchmove', onPointerMove);
-            window.addEventListener('touchstart', updatePosition);
-            window.addEventListener('touchend', updatePosition);
-        }        
+
+        const hammer = new Hammer(refContainer.current);
+        function handleTap(event) {
+            // Update pointer position
+    
+            console.log("tap")
+    
+            pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
+            pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
+    
+            // Update raycaster
+            raycaster.setFromCamera(pointer, camera);
+    
+            // Check for intersections with all interactive objects
+            const interactiveObjects = [resume, linkedin, heartModel]; // Add all your interactive objects here
+            const intersects = raycaster.intersectObjects(interactiveObjects, true);
+    
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                handleObjectClick(object);
+            }
+        }
+
+        if (isMobile){
+            hammer.on('pan', handlePan);
+            hammer.on('tap', handleTap);
+        }
         else{
             window.addEventListener('pointermove', onPointerMove);
             window.addEventListener('mouseout', () => { moveBack = true; })
@@ -506,6 +554,9 @@ export default function Home() {
             window.removeEventListener('click', clickResume);
             window.removeEventListener('click', clickHeart);
             window.removeEventListener('click', clickLinkedin);
+            hammer.off('pan', handlePan);
+            hammer.off('tap', handleTap);
+            hammer.destroy();
         };
 
     }, []);
