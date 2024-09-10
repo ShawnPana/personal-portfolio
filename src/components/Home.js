@@ -13,34 +13,13 @@ export default function Home() {
     const [raycaster] = useState(new THREE.Raycaster());
     const [pointer] = useState(new THREE.Vector2());
     const interactiveObjects = useRef([]);
-
-    // Click handler function defined outside of useEffect
-    // const clickHandler = (event, raycaster, pointer, camera, object) => {
-    //     // Update the raycaster with the mouse position
-    //     raycaster.setFromCamera(pointer, camera);
-    //     // Check for intersections
-    //     if (raycaster.intersectObject(object).length > 0) {
-    //         if (object.name === "resume"){
-    //             window.open('/textures/resume.png', '_blank');
-    //         }
-    //         else if (object.name === "heart"){
-    //             window.open('https://organregistry.org/', '_blank');
-    //         }
-    //         else if (object.name === "linkedin"){
-    //             window.open('https://www.linkedin.com/in/shawnpana', '_blank');
-    //         }
-    //     }
-    // };
     
     // Click handler function defined outside of useEffect
     const clickHandler = (event, raycaster, pointer, camera, object) => {
-        // Prevent default behavior (optional, depending on use case)
         event.preventDefault();
 
-        // Update the raycaster with the mouse position
         raycaster.setFromCamera(pointer, camera);
 
-        // Check for intersections
         const intersects = raycaster.intersectObject(object);
         
         if (intersects.length > 0) {
@@ -110,32 +89,16 @@ export default function Home() {
 
 
         function handlePan(event) {
-            // Update pointer position
             pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
             pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
-    
-            // Update raycaster
             raycaster.setFromCamera(pointer, camera);
-    
-            // Optional: Update camera or other elements based on pan
-            // For example, rotate the camera:
-            // camera.rotation.y += event.deltaX * 0.01;
-            // camera.rotation.x += event.deltaY * 0.01;
         }
 
         function handleTap(event) {
-            // Update pointer position
-    
             console.log("tap")
-    
             pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
             pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
-    
-            // Update raycaster
             raycaster.setFromCamera(pointer, camera);
-    
-            // Check for intersections with all interactive objects
-            // const interactiveObjects = [resume, linkedin, heartModel]; // Add all your interactive objects here
             const intersects = raycaster.intersectObjects(interactiveObjects, true);
     
             if (intersects.length > 0) {
