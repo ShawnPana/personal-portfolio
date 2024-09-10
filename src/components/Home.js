@@ -9,11 +9,8 @@ import ReactGA from 'react-ga4';
 
 export default function Home() {
     const refContainer = useRef(null);
-    // const [scene, setScene] = useState(null);
-    // const [camera, setCamera] = useState(null);
-    // const [raycaster] = useState(new THREE.Raycaster());
-    // const [pointer] = useState(new THREE.Vector2());
     const interactiveObjects = useRef([]);
+    const fullyLoaded = useRef(false);
 
     if (isMobile) {
         ReactGA.event({
@@ -35,6 +32,11 @@ export default function Home() {
         raycaster.setFromCamera(pointer, camera);
 
         const intersects = raycaster.intersectObject(object);
+
+        // check the loadingmanager to see if the object is loaded, if not, return
+        if (!fullyLoaded.current) {
+            return;
+        }
         
         if (intersects.length > 0) {
             switch (object.name) {
@@ -74,6 +76,11 @@ export default function Home() {
     };
 
     function handleObjectClick(object) {
+
+        if (!fullyLoaded.current) {
+            return;
+        }
+
         switch (object.name) {
             case "resume":
                 window.open('/textures/resume.png', '_blank');
@@ -149,12 +156,14 @@ export default function Home() {
         }
 
         function handleTap(event) {
-            console.log("tap")
             pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
             pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
             raycaster.setFromCamera(pointer, camera);
             const intersects = raycaster.intersectObjects(interactiveObjects, true);
     
+            if (!fullyLoaded.current) {
+                return;
+            }
             if (intersects.length > 0) {
                 const object = intersects[0].object;
                 handleObjectClick(object);
@@ -342,36 +351,62 @@ export default function Home() {
 
         // cycle through titles
         const titles = ["Software Engineer", "Web Developer", "Musician", "3D Artist", "Lover", "Philosopher", "Creator", "Innovator", "Dreamer", "Educator", "2nd Year Undergraduate", "Student at UC San Diego", "Seeking Internship Opportunities"];
-        let currentTitle;
-        let titleText;
-        var titleTextBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-        function loadTitle(){
+        const titleObjects = [];
+        const titleObjectBBs = [];
+
+        for (let i = 0; i < titles.length; i++){
+            const title = titles[i];
+            const titleBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
             fontLoader.load( "/fonts/helvetiker_regular.typeface.json", function (font) {
-                const textGeo = new TextGeometry( currentTitle, {
+                const textGeo = new TextGeometry( title, {
                     font: font,
                     size: headerSize/2,
                     depth: 0.01,
                 } );  
                 const textMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
                 const mesh = new THREE.Mesh( textGeo, textMaterial );
-                mesh.position.set(headerPosition.x, headerPosition.y, headerPosition.z);
-                scene.add( mesh );
-                titleText = mesh;
 
-                const titleTextBBHelper = new THREE.Box3Helper(titleTextBB, 0xff0000);
-                scene.add(titleTextBBHelper);
-                titleTextBBHelper.visible = false;
+                const titleBBHelper = new THREE.Box3Helper(titleBB, 0xff0000);
+                scene.add(titleBBHelper);
+                titleBBHelper.visible = false;
+                titleObjectBBs.push(titleBB);
+
+                mesh.position.set(headerPosition.x, headerPosition.y, headerPosition.z);
+                // scene.add( mesh );
+                titleObjects.push(mesh);
             });
         }
-        var index = 0;
-        currentTitle = titles[index]
-        titleText = loadTitle();
+
+        function removeObject3D(object3D) {
+            if (!(object3D instanceof THREE.Object3D)) return false;
+        
+            // for better memory management and performance
+            if (object3D.geometry) object3D.geometry.dispose();
+        
+            if (object3D.material) {
+                if (object3D.material instanceof Array) {
+                    // for better memory management and performance
+                    object3D.material.forEach(material => material.dispose());
+                } else {
+                    // for better memory management and performance
+                    object3D.material.dispose();
+                }
+            }
+            object3D.removeFromParent(); // the parent might be the scene or another Object3D, but it is sure to be removed this way
+            return true;
+        }        
+
+        let titleIndex = 0;
+        var currentTitle = titleObjects[titleIndex];
         setInterval(() => {
-            scene.remove(titleText);
-            index = (index + 1) % titles.length;
-            currentTitle = titles[index];
-            titleText = loadTitle(currentTitle);
+            removeObject3D(currentTitle);
+            titleIndex = (titleIndex + 1) % titles.length;
+            currentTitle = titleObjects[titleIndex];
+            scene.add(currentTitle);
         }, 1000);
+
+
+
         // probably the most questionable think I've done in this project   
 
         // fucking around with async/await
@@ -457,6 +492,7 @@ export default function Home() {
 
         // animation
         // const sensitivity = 9.5;
+
         var animate = function () {
             requestAnimationFrame(animate);
             const t = clock.getElapsedTime();
@@ -481,11 +517,12 @@ export default function Home() {
                 nameTextBB.setFromObject(nameText);
             }
 
-            if (titleText){
-                if (titleTextBB.intersectsBox(nameTextBB)){
-                    titleText.position.y -= 0.1;
+            if (currentTitle){
+                const currentTitleBB = titleObjectBBs[titleIndex];
+                if (currentTitleBB.intersectsBox(nameTextBB)){
+                    currentTitle.position.y -= 0.1;
                 }
-                titleTextBB.setFromObject(titleText);
+                currentTitleBB.setFromObject(currentTitle);
             }
 
             if (resume){
@@ -524,6 +561,7 @@ export default function Home() {
         };
 
         manager.onLoad = function ( ) {
+            fullyLoaded.current = true;
             animate();
             scene.visible = true;
         };
