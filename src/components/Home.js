@@ -9,19 +9,48 @@ export default function Home() {
     const refContainer = useRef(null);
 
     // Click handler function defined outside of useEffect
+    // const clickHandler = (event, raycaster, pointer, camera, object) => {
+    //     // Update the raycaster with the mouse position
+    //     raycaster.setFromCamera(pointer, camera);
+    //     // Check for intersections
+    //     if (raycaster.intersectObject(object).length > 0) {
+    //         if (object.name === "resume"){
+    //             window.open('/textures/resume.png', '_blank');
+    //         }
+    //         else if (object.name === "heart"){
+    //             window.open('https://organregistry.org/', '_blank');
+    //         }
+    //         else if (object.name === "linkedin"){
+    //             window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+    //         }
+    //     }
+    // };
+    
+    // Click handler function defined outside of useEffect
     const clickHandler = (event, raycaster, pointer, camera, object) => {
+        // Prevent default behavior (optional, depending on use case)
+        event.preventDefault();
+
         // Update the raycaster with the mouse position
         raycaster.setFromCamera(pointer, camera);
+
         // Check for intersections
-        if (raycaster.intersectObject(object).length > 0) {
-            if (object.name === "resume"){
-                window.open('/textures/resume.png', '_blank');
-            }
-            else if (object.name === "heart"){
-                window.open('https://organregistry.org/', '_blank');
-            }
-            else if (object.name === "linkedin"){
-                window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+        const intersects = raycaster.intersectObject(object);
+        
+        if (intersects.length > 0) {
+            switch (object.name) {
+                case "resume":
+                    window.open('/textures/resume.png', '_blank');
+                    break;
+                case "heart":
+                    window.open('https://organregistry.org/', '_blank');
+                    break;
+                case "linkedin":
+                    window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+                    break;
+                default:
+                    console.log("No valid object clicked.");
+                    break;
             }
         }
     };
@@ -46,25 +75,42 @@ export default function Home() {
         camera.position.z = 10;
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
-        window.addEventListener('pointermove', onPointerMove);
         var moveBack = false;
-        window.addEventListener('mouseout', () => { moveBack = true; })
-        window.addEventListener('mouseover', () => { moveBack = false; })
-        window.addEventListener('resize', () => { window.location.reload(); });
         const target = new THREE.Object3D();
         const intersectionPoint = new THREE.Vector3();
         const planeNormal = new THREE.Vector3();
         const plane = new THREE.Plane();
         const mousePosition = new THREE.Vector2();
-        window.addEventListener('mousemove', (event) => {
-            mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            planeNormal.copy(camera.position).normalize();
-            plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);
-            raycaster.setFromCamera(mousePosition, camera);
-            raycaster.ray.intersectPlane(plane, intersectionPoint);
-            target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
-        });
+        if (isMobile) {
+            const updatePosition = (event) => {
+                const touch = event.touches[0] || event.changedTouches[0];
+                mousePosition.x = (touch.clientX / window.innerWidth) * 2 - 1;
+                mousePosition.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+                planeNormal.copy(camera.position).normalize();
+                plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);
+                raycaster.setFromCamera(mousePosition, camera);
+                raycaster.ray.intersectPlane(plane, intersectionPoint);
+                target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
+            };
+            window.addEventListener('touchmove', onPointerMove);
+            window.addEventListener('touchstart', updatePosition);
+            window.addEventListener('touchend', updatePosition);
+        }        
+        else{
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('mouseout', () => { moveBack = true; })
+            window.addEventListener('mouseover', () => { moveBack = false; })
+            window.addEventListener('mousemove', (event) => {
+                mousePosition.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mousePosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                planeNormal.copy(camera.position).normalize();
+                plane.setFromNormalAndCoplanarPoint(planeNormal, scene.position);
+                raycaster.setFromCamera(mousePosition, camera);
+                raycaster.ray.intersectPlane(plane, intersectionPoint);
+                target.position.set(intersectionPoint.x, intersectionPoint.y, 2);
+            });
+        }
+        window.addEventListener('resize', () => { window.location.reload(); });
 
         const fontLoader = new FontLoader();
         const manager = new THREE.LoadingManager();
