@@ -5,6 +5,7 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { isMobile } from 'react-device-detect';
 import Hammer from 'hammerjs';
+import ReactGA from 'react-ga4';
 
 export default function Home() {
     const refContainer = useRef(null);
@@ -13,6 +14,19 @@ export default function Home() {
     const [raycaster] = useState(new THREE.Raycaster());
     const [pointer] = useState(new THREE.Vector2());
     const interactiveObjects = useRef([]);
+
+    if (isMobile) {
+        ReactGA.event({
+            category: 'User',
+            action: 'Accessed from mobile'
+        });
+    }
+    else{
+        ReactGA.event({
+            category: 'User',
+            action: 'Accessed from computer'
+        });
+    }
     
     // Click handler function defined outside of useEffect
     const clickHandler = (event, raycaster, pointer, camera, object) => {
@@ -26,12 +40,24 @@ export default function Home() {
             switch (object.name) {
                 case "resume":
                     window.open('/textures/resume.png', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed resume from computer'
+                    });
                     break;
                 case "heart":
                     window.open('https://organregistry.org/', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed organregistry.org from computer'
+                    });
                     break;
                 case "linkedin":
                     window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed linkedin from computer'
+                    });
                     break;
                 default:
                     console.log("No valid object clicked.");
@@ -44,12 +70,24 @@ export default function Home() {
         switch (object.name) {
             case "resume":
                 window.open('/textures/resume.png', '_blank');
+                ReactGA.event({
+                    category: 'User',
+                    action: 'Viewed resume from mobile'
+                });
                 break;
             case "linkedin":
                 window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+                ReactGA.event({
+                    category: 'User',
+                    action: 'Viewed linkedin from mobile'
+                });
                 break;
             case "heart":
                 window.open('https://organregistry.org/', '_blank');
+                ReactGA.event({
+                    category: 'User',
+                    action: 'Viewed organregistry.org from mobile'
+                });
                 break;
             default:
                 console.log("No valid object clicked.");
@@ -65,6 +103,8 @@ export default function Home() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         refContainer.current && refContainer.current.appendChild( renderer.domElement );
         var clock = new THREE.Clock();
+
+        ReactGA.initialize('G-GSRJQ6Y41W');
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
         directionalLight.position.set(0, 2, -2);
@@ -137,40 +177,6 @@ export default function Home() {
         function onPointerMove(event) {
             pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
             pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-        }
-        function glideToPosition(object, targetPosition, speed) {
-            // Calculate the direction vector from the current position to the target position
-            let direction = {
-                x: targetPosition.x - object.position.x,
-                y: targetPosition.y - object.position.y,
-                z: targetPosition.z - object.position.z
-            };
-            
-            // Calculate the distance to the target
-            let distance = Math.sqrt(direction.x ** 2 + direction.y ** 2 + direction.z ** 2);
-            
-            // If the distance is less than the speed, move directly to the target position
-            if (distance < speed) {
-                object.position.x = targetPosition.x;
-                object.position.y = targetPosition.y;
-                object.position.z = targetPosition.z;
-                return;
-            }
-            
-            // Normalize the direction vector
-            direction.x /= distance;
-            direction.y /= distance;
-            direction.z /= distance;
-            
-            // Scale the direction vector by the speed
-            direction.x *= speed;
-            direction.y *= speed;
-            direction.z *= speed;
-            
-            // Update the object's position
-            object.position.x += direction.x;
-            object.position.y += direction.y;
-            object.position.z += direction.z;
         }
         function calculateBounds(z, camera){
             var min = new THREE.Vector2();
@@ -451,8 +457,6 @@ export default function Home() {
                     loadedModel.getObjectByName('spine005').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
                     loadedModel.getObjectByName('spine006').lookAt(mousePosition.x, mousePosition.y, loadedModel.position.z+1);
                 }
-                // loadedModel.getObjectByName('spine005').lookAt(camera.position);
-                // loadedModel.getObjectByName('spine006').lookAt(camera.position);
                 loadedModelBB.setFromObject(loadedModel);
             }
 
@@ -487,9 +491,7 @@ export default function Home() {
                 heartModelBB.setFromObject(heartModel);
             }
 
-            // TODO: figure out icon positioning
             if (linkedin){
-                // calclate the bounds of the linkedin icon relative to the camera and set the position to the bottom right of the camera view
                 const widthOfLinkedIn = linkedinModelBB.max.x - linkedinModelBB.min.x;
                 linkedin.position.x = linkedinBounds.max.x - widthOfLinkedIn;
                 linkedin.position.y = linkedinBounds.min.y;
