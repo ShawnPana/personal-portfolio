@@ -1,9 +1,11 @@
 import './App.css';
-import Home from './components/Home'
+// import Home from './components/Home'
+import Rollout from './components/Rollout'
 
 function App() {
   return (
-    <Home />
+    // <Home />
+    <Rollout />
   );
 }
 
