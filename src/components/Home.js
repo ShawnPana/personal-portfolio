@@ -64,25 +64,10 @@ export default function Home() {
         });
 
         const fontLoader = new FontLoader();
-
         const manager = new THREE.LoadingManager();
-        manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-            console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-        };
-
-        manager.onLoad = function ( ) {
-            console.log( 'Loading complete!');
-        };
-
-        manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-        };
-
-        manager.onError = function ( url ) {
-            console.log( 'There was an error loading ' + url );
-        };
-
         const gltfLoader = new GLTFLoader(manager);
+
+        scene.visible = false;
 
         // functions
         function onPointerMove(event) {
@@ -381,6 +366,8 @@ export default function Home() {
         //     });
         // }
 
+        // add everything to scene
+
         // animation
         const sensitivity = 9.5;
         var animate = function () {
@@ -446,7 +433,23 @@ export default function Home() {
             }
             renderer.render(scene, camera);
         };
-        animate();
+
+        manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        manager.onLoad = function ( ) {
+            animate();
+            scene.visible = true;
+        };
+
+        manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        };
+
+        manager.onError = function ( url ) {
+            console.log( 'There was an error loading ' + url );
+        };
 
         return () => {
             window.removeEventListener('click', clickResume);
