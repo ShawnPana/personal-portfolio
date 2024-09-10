@@ -34,11 +34,14 @@ export default function Home() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         refContainer.current && refContainer.current.appendChild( renderer.domElement );
         var clock = new THREE.Clock();
-        const light = new THREE.AmbientLight( 0xffffff, 3 ); 
-        scene.add(light)
+
         const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
         directionalLight.position.set(0, 2, -2);
+        const directionalLight2 = new THREE.DirectionalLight(0xffffff, 3);
+        directionalLight2.position.set(0, 0, 5);
         scene.add(directionalLight);
+        scene.add(directionalLight2);
+
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 10;
         const raycaster = new THREE.Raycaster();
@@ -408,6 +411,7 @@ export default function Home() {
                 resume.position.y = 0;
 
                 resume.rotation.y = t;
+                resume.position.y = Math.sin(t) * 0.1;
                 
             }
             if (heartModel){
@@ -418,6 +422,7 @@ export default function Home() {
                 heartModel.position.y = 0;
 
                 heartModel.rotation.y = t;
+                heartModel.position.y = Math.sin(t) * 0.1;
                 heartModelBB.setFromObject(heartModel);
             }
 
