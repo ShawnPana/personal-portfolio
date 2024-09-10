@@ -12,6 +12,7 @@ export default function Home() {
     const [camera, setCamera] = useState(null);
     const [raycaster] = useState(new THREE.Raycaster());
     const [pointer] = useState(new THREE.Vector2());
+    const interactiveObjects = useRef([]);
 
     // Click handler function defined outside of useEffect
     // const clickHandler = (event, raycaster, pointer, camera, object) => {
@@ -76,20 +77,6 @@ export default function Home() {
                 break;
         }
     }
-    
-    function handlePan(event) {
-        // Update pointer position
-        pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
-
-        // Update raycaster
-        raycaster.setFromCamera(pointer, camera);
-
-        // Optional: Update camera or other elements based on pan
-        // For example, rotate the camera:
-        // camera.rotation.y += event.deltaX * 0.01;
-        // camera.rotation.x += event.deltaY * 0.01;
-    }
 
     useEffect(() => {
         // scene setup
@@ -108,6 +95,7 @@ export default function Home() {
         scene.add(directionalLight2);
 
         var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+        setCamera(camera);
         camera.position.z = 10;
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
@@ -119,6 +107,22 @@ export default function Home() {
         const mousePosition = new THREE.Vector2();
 
         const hammer = new Hammer(refContainer.current);
+
+
+        function handlePan(event) {
+            // Update pointer position
+            pointer.x = (event.center.x / window.innerWidth) * 2 - 1;
+            pointer.y = -(event.center.y / window.innerHeight) * 2 + 1;
+    
+            // Update raycaster
+            raycaster.setFromCamera(pointer, camera);
+    
+            // Optional: Update camera or other elements based on pan
+            // For example, rotate the camera:
+            // camera.rotation.y += event.deltaX * 0.01;
+            // camera.rotation.x += event.deltaY * 0.01;
+        }
+
         function handleTap(event) {
             // Update pointer position
     
@@ -131,7 +135,7 @@ export default function Home() {
             raycaster.setFromCamera(pointer, camera);
     
             // Check for intersections with all interactive objects
-            const interactiveObjects = [resume, linkedin, heartModel]; // Add all your interactive objects here
+            // const interactiveObjects = [resume, linkedin, heartModel]; // Add all your interactive objects here
             const intersects = raycaster.intersectObjects(interactiveObjects, true);
     
             if (intersects.length > 0) {
@@ -549,6 +553,12 @@ export default function Home() {
         manager.onError = function ( url ) {
             console.log( 'There was an error loading ' + url );
         };
+
+        scene.traverse((child) => {
+            if (child.isMesh) {
+                interactiveObjects.current.push(child);
+            }
+        });
 
         return () => {
             window.removeEventListener('click', clickResume);
