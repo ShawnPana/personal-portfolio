@@ -3,7 +3,6 @@ import { useEffect, useRef } from 'react'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 import { isMobile } from 'react-device-detect';
 import Hammer from 'hammerjs';
 import ReactGA from 'react-ga4';
@@ -35,53 +34,40 @@ export default function Home() {
         if (!fullyLoaded.current) {
             return;
         }
-
-        if (object.name === "shawn"){
-            const intersects = raycaster.intersectObject(object.getObjectByName("spine006"), true);
-            if (intersects.length > 0){
-                window.open('/music/song_4.mp3', '_blank');
-                ReactGA.event({
-                    category: 'User',
-                    action: 'Viewed Draped from computer'
-                });
-            }
-        }
-        else{
-            const intersects = raycaster.intersectObject(object);
-            if (intersects.length > 0) {
-                switch (object.name) {
-                    case "resume":
-                        window.open('/textures/resume.png', '_blank');
-                        ReactGA.event({
-                            category: 'User',
-                            action: 'Viewed resume from computer'
-                        });
-                        break;
-                    case "heart":
-                        window.open('https://organregistry.org/', '_blank');
-                        ReactGA.event({
-                            category: 'User',
-                            action: 'Viewed organregistry.org from computer'
-                        });
-                        break;
-                    case "linkedin":
-                        window.open('https://www.linkedin.com/in/shawnpana', '_blank');
-                        ReactGA.event({
-                            category: 'User',
-                            action: 'Viewed linkedin from computer'
-                        });
-                        break;
-                    case "shawn":
-                        window.open('/music/song_4.mp3', '_blank');
-                        ReactGA.event({
-                            category: 'User',
-                            action: 'Viewed Draped from computer'
-                        });
-                        break;
-                    default:
-                        console.log("No valid object clicked.");
-                        break;
-                }
+        const intersects = raycaster.intersectObject(object);
+        if (intersects.length > 0) {
+            switch (object.name) {
+                case "resume":
+                    window.open('/textures/resume.png', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed resume from computer'
+                    });
+                    break;
+                case "heart":
+                    window.open('https://organregistry.org/', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed organregistry.org from computer'
+                    });
+                    break;
+                case "linkedin":
+                    window.open('https://www.linkedin.com/in/shawnpana', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed linkedin from computer'
+                    });
+                    break;
+                case "shawn":
+                    window.open('/music/song_4.mp3', '_blank');
+                    ReactGA.event({
+                        category: 'User',
+                        action: 'Viewed Draped from computer'
+                    });
+                    break;
+                default:
+                    console.log("No valid object clicked.");
+                    break;
             }
         }
     };
@@ -135,11 +121,6 @@ export default function Home() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         refContainer.current && refContainer.current.appendChild( renderer.domElement );
         var clock = new THREE.Clock();
-        let controls;
-        controls = new FirstPersonControls( camera, renderer.domElement );
-		controls.movementSpeed = 150;
-		controls.lookSpeed = 0.1;
-
 
         ReactGA.initialize('G-GSRJQ6Y41W');
 
