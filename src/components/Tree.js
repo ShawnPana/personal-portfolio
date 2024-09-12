@@ -50,6 +50,8 @@ export default function Tree() {
                 case 'KeyD':
                     moveRight = true;
                     break;
+                default:
+                    break;
             }
         };
 
@@ -66,6 +68,8 @@ export default function Tree() {
                     break;
                 case 'KeyD':
                     moveRight = false;
+                    break;
+                default:
                     break;
             }
         };
@@ -86,7 +90,6 @@ export default function Tree() {
             model.position.set(-17.6206, -11.1618, -7.03967);
         });
 
-        let nameText;
         fontLoader.load( "/fonts/helvetiker_regular.typeface.json", function (font) {
             const textGeo = new TextGeometry( "organregistry.org", {
                 font: font,
@@ -96,7 +99,6 @@ export default function Tree() {
             const textMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
             const mesh = new THREE.Mesh( textGeo, textMaterial );
             scene.add( mesh );
-            nameText = mesh;
         });
 
         let mixer;
