@@ -84,6 +84,7 @@ export default function Tree() {
                 keys[e.key.toLowerCase()] = false;
             }
         });
+        window.addEventListener('resize', () => { window.location.reload(); });
 
 
         let model;
@@ -232,6 +233,7 @@ export default function Tree() {
                     keys[e.key.toLowerCase()] = false;
                 }
             });
+            window.removeEventListener('resize', () => { window.location.reload(); });
             document.removeEventListener('click', lockControls);
             document.removeEventListener('keydown', onKeyDown);
             document.removeEventListener('keyup', onKeyUp);
