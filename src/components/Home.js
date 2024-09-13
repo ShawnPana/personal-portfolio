@@ -553,12 +553,22 @@ export default function Home() {
             renderer.render(scene, camera);
         };
 
+        // manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+        //     console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        // };
+
+        // manager.onLoad = function ( ) {
+        //     fullyLoaded.current = true;
+        //     animate();
+        //     scene.visible = true;
+        // };
         manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
             console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+            document.getElementById('loadingOverlay').style.display = 'block';
         };
 
         manager.onLoad = function ( ) {
-            fullyLoaded.current = true;
+            document.getElementById('loadingOverlay').style.display = 'none';
             animate();
             scene.visible = true;
         };
@@ -590,6 +600,29 @@ export default function Home() {
     }, []);
 
     return (
-        <div ref={refContainer}></div>
+        // <div ref={refContainer}></div>
+        <div ref={refContainer}>
+            {
+                <div
+                    id="loadingOverlay"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                        color: '#fff',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontSize: '2rem',
+                        zIndex: 10,
+                    }}
+                >
+                    loading...  
+                </div>
+            }
+        </div>
     )
 }
