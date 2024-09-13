@@ -207,7 +207,8 @@ export default function Tree() {
         };
 
         manager.onLoad = function ( ) {
-            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('loadingOverlay').style.opacity = 0;
+            document.getElementById('loadingOverlay').style.transition = 'opacity 1s';
             animate();
             scene.visible = true;
         };
