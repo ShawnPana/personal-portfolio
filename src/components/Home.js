@@ -569,6 +569,7 @@ export default function Home() {
 
         manager.onLoad = function ( ) {
             document.getElementById('loadingOverlay').style.display = 'none';
+            fullyLoaded.current = true;
             animate();
             scene.visible = true;
         };
