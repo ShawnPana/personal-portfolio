@@ -5,6 +5,8 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { isMobile } from 'react-device-detect';
+import { Water } from 'three/addons/objects/Water.js';
+
 
 export default function Tree() {
     const refContainer = useRef(null);
@@ -182,6 +184,30 @@ export default function Tree() {
             action.play();
         });
 
+        const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+
+        let water;
+        water = new Water(
+            waterGeometry,
+            {
+                textureWidth: 512,
+                textureHeight: 512,
+                waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
+
+                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+                } ),
+                sunDirection: new THREE.Vector3(),
+                sunColor: 0xffffff,
+                waterColor: 0x001e0f,
+                distortionScale: 3.7,
+                fog: scene.fog !== undefined
+            }
+        );
+
+        water.rotation.x = - Math.PI / 2;
+
+        scene.add( water );
 
         var animate = function () {
             requestAnimationFrame(animate);
@@ -192,10 +218,6 @@ export default function Tree() {
                 camera.position.x = Math.cos(clock.getElapsedTime()) * 42;
                 camera.position.y = -2;
                 camera.lookAt(0, 0, 0);
-
-                // text.position.x = Math.sin(clock.getElapsedTime()) * 20;
-                // text.position.y = Math.sin(clock.getElapsedTime()) * -0.25;
-                // text.position.z = Math.cos(clock.getElapsedTime()) * 20;
             }
             else{
                 if (keys.w) controls.moveForward(moveSpeed);
@@ -238,6 +260,8 @@ export default function Tree() {
             if (text){
                 text.lookAt(camera.position);
             }
+
+            water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
             renderer.render(scene, camera);
         };
