@@ -4,9 +4,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { Water } from 'three/addons/objects/Water.js'; // Import Water class
 import { isMobile } from 'react-device-detect';
-import { Water } from 'three/addons/objects/Water.js';
-
 
 export default function Tree() {
     const refContainer = useRef(null);
@@ -184,30 +183,29 @@ export default function Tree() {
             action.play();
         });
 
-        const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+        // Water/Ocean Setup
+        const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+        const water = new Water(waterGeometry, {
+            textureWidth: 512,
+            textureHeight: 512,
+            waterNormals: new THREE.TextureLoader().load('/textures/waternormals.jpg', function (texture) {
+                texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            }),
+            sunDirection: new THREE.Vector3(),
+            sunColor: 0xffffff,
+            waterColor: 0x001e0f,
+            distortionScale: 3.7,
+            fog: scene.fog !== undefined,
 
-        let water;
-        water = new Water(
-            waterGeometry,
-            {
-                textureWidth: 512,
-                textureHeight: 512,
-                waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
+        });
 
-                    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        const waterUniforms = water.material.uniforms;
+        waterUniforms.distortionScale.value = 0;
 
-                } ),
-                sunDirection: new THREE.Vector3(),
-                sunColor: 0xffffff,
-                waterColor: 0x001e0f,
-                distortionScale: 3.7,
-                fog: scene.fog !== undefined
-            }
-        );
 
-        water.rotation.x = - Math.PI / 2;
-
-        scene.add( water );
+        water.rotation.x = - Math.PI / 2; 
+        water.position.y = -12;
+        scene.add(water);
 
         var animate = function () {
             requestAnimationFrame(animate);
@@ -244,6 +242,9 @@ export default function Tree() {
                 controls.getObject().position.y -= velocity.y * delta;
             }
 
+            // Update the water
+            water.material.uniforms['time'].value += 1.0 / 60.0;
+
             if (mixer) {
                 mixer.update(0);
                 mixer.setTime(5);
@@ -260,8 +261,6 @@ export default function Tree() {
             if (text){
                 text.lookAt(camera.position);
             }
-
-            water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
             renderer.render(scene, camera);
         };
