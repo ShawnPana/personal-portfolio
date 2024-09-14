@@ -28,6 +28,9 @@ export default function Tree() {
         let moveBackward = false;
         let moveLeft = false;
         let moveRight = false;
+        let moveDown = false;
+        let moveUp = false;
+
         const velocity = new THREE.Vector3();
         const direction = new THREE.Vector3();
         const onKeyDown = function ( event ) {
@@ -43,6 +46,12 @@ export default function Tree() {
                     break;
                 case 'KeyD':
                     moveRight = true;
+                    break;
+                case 'ShiftLeft':
+                    moveDown = true;
+                    break;
+                case 'Space':
+                    moveUp = true;
                     break;
                 default:
                     break;
@@ -62,6 +71,12 @@ export default function Tree() {
                 case 'KeyD':
                     moveRight = false;
                     break;
+                case 'ShiftLeft':
+                    moveDown = false;
+                    break;
+                case 'Space':
+                    moveUp = false;
+                    break;
                 default:
                     break;
             }
@@ -72,15 +87,24 @@ export default function Tree() {
             controls.lock();
         };
         document.addEventListener('click', lockControls);
-        const keys = { w: false, a: false, s: false, d: false };
+        const keys = { w: false, a: false, s: false, d: false, shift: false, space: false };
         const moveSpeed = 0.1;
         window.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() in keys) {
+            e.preventDefault();
+            if (e.key === ' '){
+                e.preventDefault();
+                keys.space = true;
+            }
+            else if (e.key.toLowerCase() in keys) {
                 keys[e.key.toLowerCase()] = true;
             }
         });
         window.addEventListener('keyup', (e) => {
-            if (e.key.toLowerCase() in keys) {
+            e.preventDefault();
+            if (e.key === ' '){
+                keys.space = false;
+            }
+            else if (e.key.toLowerCase() in keys) {
                 keys[e.key.toLowerCase()] = false;
             }
         });
@@ -167,19 +191,24 @@ export default function Tree() {
                 if (keys.s) controls.moveForward(-moveSpeed);
                 if (keys.a) controls.moveRight(-moveSpeed);
                 if (keys.d) controls.moveRight(moveSpeed);
+                if (keys.shift) camera.position.y -= moveSpeed;
+                if (keys.space) camera.position.y += moveSpeed;
 
                 velocity.x -= velocity.x * 10.0 * delta;
                 velocity.z -= velocity.z * 10.0 * delta;
 
                 direction.z = Number( moveForward ) - Number( moveBackward );
                 direction.x = Number( moveRight ) - Number( moveLeft );
+                direction.y = Number( moveUp ) - Number( moveDown );
                 direction.normalize(); // this ensures consistent movements in all directions
 
                 if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
                 if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
+                if ( moveUp || moveDown ) velocity.y -= direction.y * 400.0 * delta;
 
                 controls.moveRight( - velocity.x * delta );
                 controls.moveForward( - velocity.z * delta );
+                controls.getObject().position.y -= velocity.y * delta;
             }
 
             if (mixer) {
