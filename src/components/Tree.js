@@ -216,40 +216,52 @@ export default function Tree() {
         sky.scale.setScalar(10000);
         scene.add(sky);
         const skyUniforms = sky.material.uniforms;
-        skyUniforms[ 'turbidity' ].value = 10;
-        skyUniforms[ 'rayleigh' ].value = 2;
-        skyUniforms[ 'mieCoefficient' ].value = 0.005;
-        skyUniforms[ 'mieDirectionalG' ].value = 0.8;
-
+        // skyUniforms[ 'turbidity' ].value = 10;
+        // skyUniforms[ 'rayleigh' ].value = 2;
+        // skyUniforms[ 'mieCoefficient' ].value = 0.005;
+        // skyUniforms[ 'mieDirectionalG' ].value = 0.8;
+        skyUniforms['turbidity'].value = 0.1;
+        skyUniforms['rayleigh'].value = 0.1;
+        skyUniforms['mieCoefficient'].value = 0.005;
+        skyUniforms['mieDirectionalG'].value = 0.8;
         const parameters = {
             elevation: 2,
             azimuth: 180
         };
-
         const pmremGenerator = new THREE.PMREMGenerator( renderer );
         const sceneEnv = new THREE.Scene();
         let renderTarget;
-
         function updateSun() {
-
             const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
             const theta = THREE.MathUtils.degToRad( parameters.azimuth );
-
             sun.setFromSphericalCoords( 1, phi, theta );
-
             sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
             water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
-
             if ( renderTarget !== undefined ) renderTarget.dispose();
-
             sceneEnv.add( sky );
             renderTarget = pmremGenerator.fromScene( sceneEnv );
             scene.add( sky );
-
             scene.environment = renderTarget.texture;
-
         }
 
+        // Add Stars
+        function createStars() {
+            const starGeometry = new THREE.SphereGeometry(0.5, 24, 24);
+            const starMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+            for (let i = 0; i < 1000; i++) {
+                const star = new THREE.Mesh(starGeometry, starMaterial);
+
+                star.position.x = THREE.MathUtils.randFloatSpread(2000);
+                star.position.y = THREE.MathUtils.randFloatSpread(2000);
+                star.position.z = THREE.MathUtils.randFloatSpread(2000);
+
+                scene.add(star);
+            }
+        }
+
+        // Create the stars for the night sky
+        createStars();
 
         var animate = function () {
             requestAnimationFrame(animate);
