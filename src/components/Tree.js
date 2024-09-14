@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { isMobile } from 'react-device-detect';
 
 export default function Tree() {
     const refContainer = useRef(null);
@@ -87,6 +88,7 @@ export default function Tree() {
             controls.lock();
         };
         document.addEventListener('click', lockControls);
+
         const keys = { w: false, a: false, s: false, d: false, shift: false, space: false };
         const moveSpeed = 0.1;
         window.addEventListener('keydown', (e) => {
@@ -185,8 +187,17 @@ export default function Tree() {
             requestAnimationFrame(animate);
             const delta = clock.getDelta();
 
-            if ( controls.isLocked === true ) {
+            if ( controls.isLocked === false || isMobile) {
+                camera.position.z = Math.sin(clock.getElapsedTime()) * 42;
+                camera.position.x = Math.cos(clock.getElapsedTime()) * 42;
+                camera.position.y = -2;
+                camera.lookAt(0, 0, 0);
 
+                // text.position.x = Math.sin(clock.getElapsedTime()) * 20;
+                // text.position.y = Math.sin(clock.getElapsedTime()) * -0.25;
+                // text.position.z = Math.cos(clock.getElapsedTime()) * 20;
+            }
+            else{
                 if (keys.w) controls.moveForward(moveSpeed);
                 if (keys.s) controls.moveForward(-moveSpeed);
                 if (keys.a) controls.moveRight(-moveSpeed);
@@ -285,7 +296,7 @@ export default function Tree() {
                         left: 0,
                         width: '100vw',
                         height: '100vh',
-                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                        backgroundColor: 'rgba(0, 0, 0, 1)',
                         color: '#fff',
                         display: 'flex',
                         justifyContent: 'center',
