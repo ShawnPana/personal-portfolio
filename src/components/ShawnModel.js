@@ -25,7 +25,7 @@ const ShawnModel = () => {
     mountRef.current.appendChild(renderer.domElement);
 
     // 2. Add lights to the scene
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -35,14 +35,14 @@ const ShawnModel = () => {
     // 3. Load the GLB model
     const loader = new GLTFLoader();
     loader.load(
-      '/models/realistic_human_heart.glb', // Ensure the model file exists at this path in public/models/
+      '/models/shawnfullbodyglb.glb', // Ensure the model file exists at this path in public/models/
       (gltf) => {
         const model = gltf.scene;
         scene.add(model);
 
         // Adjust model position and scale for optimal display
-        model.position.set(0, 0.8, 0);
-        model.scale.set(1.5, 1.5, 1.5);
+        model.position.set(0, -0.3, 0);
+        model.scale.set(1.2, 1.2, 1.2);
       },
       undefined,
       (error) => {
@@ -55,6 +55,7 @@ const ShawnModel = () => {
       requestAnimationFrame(animate);
       // Optional: rotate the scene for dynamic effect
       scene.rotation.y += 0.01;
+      
       renderer.render(scene, camera);
     };
     animate();
