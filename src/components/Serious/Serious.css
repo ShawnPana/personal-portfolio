@@ -49,7 +49,8 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;  /* Two equal columns (50% each) */
   gap: 2rem;                     /* Horizontal gap between columns */
-  margin-bottom: px;
+  margin-bottom: 35px;
+  margin-top: 35px;
   align-items: stretch;          /* Stretch both columns to the same height */
 }
 
@@ -66,12 +67,64 @@ body {
 .hero-left {
   display: flex;
   flex-direction: column;
-  gap: 2rem; /* Vertical spacing between blocks */
+  gap: 2rem;
+  /* other styles as needed */
 }
 
+/* Container that holds the About Me and Contact Me pairs */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* Adjust gap as needed */
+  /* This container will take the full width of its parent */
+}
+
+/* Each item (About Me, Contact Me) as a unit */
+.info-item {
+  /* You can add padding/margin if needed */
+}
+
+/* Styling for headings inside each info-item */
+.info-item h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+/* Underline line for the headings */
+.info-item h2::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: #fff;
+  margin-top: 8px;
+}
+
+/* Styling for paragraphs inside each info-item */
+.info-item p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ccc;
+  margin: 0; /* Remove default margins for consistency */
+}
+
+
+/* Style the combined heading */
 .hero-left h1 {
   font-size: 36px;
   color: #fff;
+  margin-bottom: 0; /* Remove extra gap below h1 */
+}
+
+/* The subheading will be styled via a dedicated class */
+.hero-subheading {
+  font-size: 18px;  /* Subheading size */
+  color: #ccc;
+  margin-top: 0.5rem;  /* Space after the main title if desired */
+  display: block;
 }
 
 .hero-left h2 {
