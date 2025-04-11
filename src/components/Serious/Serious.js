@@ -78,44 +78,57 @@ export default function Serious() {
       <div className="hero-section">
         {/* Left Column */}
         <div className="hero-left">
-          <h1>Shawn Pana</h1>
-          <h2>Software Engineer & <br /> Machine Learning Developer</h2>
-          
-          <h2>About Me</h2>
-          <p>
-            Mathematics-Computer Science and Music @{' '}
-            <a 
-              href="https://www.ucsd.edu"
-              style={{ color: '#F1C500', textDecoration: 'none' }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              UC San Diego
-            </a>
-          </p>
-
-          <h2>Contact Me</h2>
-          <p>
-            Email me directly at{' '}
-            <a
-              href="mailto:spana@ucsd.edu"
-              style={{ color: '#F1C500', textDecoration: 'none' }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              spana@ucsd.edu
-            </a>.
+          <h1>
+            Shawn Pana
             <br />
-            You can also message me on{' '}
-            <a
-              href="https://www.linkedin.com/in/shawnpana/"
-              style={{ color: '#0077B5', textDecoration: 'none' }}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn
-            </a>.
-          </p>
+            <span className="hero-subheading">
+              Software Engineer & <br /> Machine Learning Developer
+            </span>
+          </h1>
+          {/* The rest of your hero-left content (About, Contact) goes here */}
+          <div className="info-section">
+            <div className="info-item">
+              <h2>About Me</h2>
+              <p>
+                Mathematics-Computer Science and Music <br />
+                @{' '}
+                <a 
+                  href="https://www.ucsd.edu" 
+                  style={{ color: '#F1C500', textDecoration: 'none' }}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  UC San Diego
+                </a>
+              </p>
+            </div>
+
+            <div className="info-item">
+              <h2>Contact Me</h2>
+              <p>
+                Email me directly at{' '}
+                <a 
+                  href="mailto:spana@ucsd.edu" 
+                  style={{ color: '#F1C500', textDecoration: 'none' }}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  spana@ucsd.edu
+                </a>.
+                <br />
+                You can also message me on{' '}
+                <a 
+                  href="https://www.linkedin.com/in/shawnpana/" 
+                  style={{ color: '#0077B5', textDecoration: 'none' }}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>.
+              </p>
+            </div>
+          </div>
+
         </div>
 
         {/* Right Column: 3D Model */}
