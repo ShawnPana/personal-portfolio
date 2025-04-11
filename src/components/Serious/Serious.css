@@ -49,7 +49,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;  /* Two equal columns (50% each) */
   gap: 2rem;                     /* Horizontal gap between columns */
-  margin-bottom: 35px;
+  margin-bottom: px;
   align-items: stretch;          /* Stretch both columns to the same height */
 }
 
