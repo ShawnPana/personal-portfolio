@@ -52,6 +52,8 @@ body {
   margin-top: 35px;
   margin-bottom: 35px;
   align-items: stretch;
+
+  min-height: 475px;
 }
 
 /* Right Column: 3D Model Container */
