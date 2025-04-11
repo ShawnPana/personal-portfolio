@@ -10,19 +10,14 @@ const ShawnModel = () => {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#000000');
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      mountRef.current.clientWidth / mountRef.current.clientHeight,
-      0.1,
-      1000
-    );
-
-    // Adjust camera position to bring it closer to the model
-    camera.position.set(0, 1, 3); // Changed Z from 5 to 3 for a closer view
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
     const width = mountRef.current.clientWidth;
     const height = mountRef.current.clientHeight;
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+
+    // Adjust camera position to get the desired view of the model
+    camera.position.set(0, 1, 3.5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -40,19 +35,14 @@ const ShawnModel = () => {
     // 3. Load the GLB model
     const loader = new GLTFLoader();
     loader.load(
-      '/models/realistic_human_heart.glb', // Update your model path if needed
+      '/models/realistic_human_heart.glb', // Ensure the model file exists at this path in public/models/
       (gltf) => {
         const model = gltf.scene;
         scene.add(model);
 
-        // Adjust model position and scale
-        model.position.set(0, 1.1, 0); // Slight upward adjustment
-        model.scale.set(1.5, 1.5, 1.5);   // Increase scale for better visibility
-        // Model offsets
-
-// Camera can be closer/further
-camera.position.set(0, 1, 3.5);
-
+        // Adjust model position and scale for optimal display
+        model.position.set(0, 0.8, 0);
+        model.scale.set(1.5, 1.5, 1.5);
       },
       undefined,
       (error) => {
@@ -63,9 +53,9 @@ camera.position.set(0, 1, 3.5);
     // 4. Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
+      // Optional: rotate the scene for dynamic effect
+      scene.rotation.y += 0.01;
       renderer.render(scene, camera);
-        scene.rotation.y += 0.01; // Rotate the entire scene
-
     };
     animate();
 
@@ -82,7 +72,7 @@ camera.position.set(0, 1, 3.5);
 
   return (
     <div
-      style={{ width: '100%', height: '300px' }} // Adjust container size as needed
+      style={{ width: '100%', height: '100%' }} // This should match .hero-right dimensions in CSS
       ref={mountRef}
     />
   );
