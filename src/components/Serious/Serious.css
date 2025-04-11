@@ -22,7 +22,7 @@ body {
   animation: fadeIn 0.6s ease-out;
 }
 
-/* Header styles */
+/* Header styles (these remain full width) */
 .header {
   margin-bottom: 60px;
   color: white;
@@ -44,55 +44,59 @@ body {
   text-align: left;
 }
 
-/* Two-column layout for About & Contact (left) and Model (right) */
-.about-container {
+/* HERO SECTION: Two-column layout for left (Title, About, Contact) and right (Model) */
+.hero-section {
   display: grid;
   grid-template-columns: 1fr 1fr;  /* Two equal columns (50% each) */
   gap: 2rem;                     /* Horizontal gap between columns */
-  margin-bottom: 70px;
+  margin-bottom: 35px;
+  align-items: stretch;          /* Stretch both columns to the same height */
 }
 
-/* Left Column: About & Contact Content */
-.about-content {
+/* Right Column: 3D Model Container */
+.hero-right {
+  display: flex;                /* Use flexbox */
+  align-items: center;          /* Center vertically */
+  justify-content: center;      /* Center horizontally */
+  /* Optionally, remove any fixed height to allow stretching if needed */
+  /* height: auto; */
+}
+
+/* Left Column: Contains title, About Me and Contact Me */
+.hero-left {
   display: flex;
   flex-direction: column;
-  /* NEW: Increase the gap to provide more vertical spacing 
-     between “About Me” and “Contact Me” */
-  gap: 4rem; 
+  gap: 2rem; /* Vertical spacing between blocks */
 }
 
-/* NEW: Reintroduce lines under the headings in about-content */
-.about-content h2 {
-  font-size: 22px;
-  font-weight: 600;
+.hero-left h1 {
+  font-size: 36px;
   color: #fff;
-  position: relative; /* For pseudo-element positioning */
-  margin-bottom: 0.5rem;
 }
 
-.about-content h2::after {
+.hero-left h2 {
+  font-size: 18px;
+  color: #ccc;
+}
+
+/* Underlines for headings in hero-left */
+.hero-left h2::after {
   content: "";
   display: block;
   height: 1px;
-  width: 100%;         /* or 50%, if you only want a half-width line */
+  width: 100%;
   background-color: #fff;
   margin-top: 8px;
 }
 
-/* Increase space between heading and subsequent text */
-.about-content p {
+/* Paragraphs in hero-left */
+.hero-left p {
   font-size: 16px;
   line-height: 1.7;
   color: #ccc;
 }
 
-/* Right Column: Model Container */
-.about-model {
-  width: 100%;
-  height: 400px; /* Set the height for your 3D model container */
-}
-
-/* Section styles for other sections */
+/* Section styles for Projects, Skills, etc. (full width) */
 .section {
   margin-bottom: 70px;
   text-align: left;
@@ -102,7 +106,7 @@ body {
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 25px;
-  color: #fff; /* Light heading text */
+  color: #fff;
   position: relative;
 }
 
@@ -110,7 +114,7 @@ body {
   content: "";
   display: block;
   height: 1px;
-  width: 100%; /* Full width underline */
+  width: 100%;
   background-color: #fff;
   margin-top: 10px;
 }
@@ -118,14 +122,14 @@ body {
 /* Projects carousel wrapper */
 .projects-carousel-container {
   position: relative;
-  overflow: visible; /* Allows glow and effects to extend beyond the container */
+  overflow: visible; /* Allows glow to extend outside the container */
 }
 
 /* Projects grid with responsive layout */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;   /* Equal spacing both horizontally and vertically */
+  gap: 20px;   /* Equal spacing horizontally and vertically */
   padding: 0 10px;
   margin-top: 20px;
 }
@@ -214,12 +218,11 @@ body {
 
 /* Responsive adjustments for small screens */
 @media (max-width: 768px) {
-  .about-container {
-    grid-template-columns: 1fr;  /* Stack content vertically */
+  .hero-section {
+    grid-template-columns: 1fr;  /* Stack the hero content vertically */
   }
   
-  .about-model {
-    width: 100%;
-    height: 100%;
+  .hero-right {
+    height: 300px; /* Adjust as needed */
   }
 }

@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import './Serious.css';
-import ShawnModel from '../ShawnModel.js'
+import ShawnModel from '../ShawnModel.js';
 
 export default function Serious() {
   const scrollRef = useRef(null);
@@ -24,34 +24,35 @@ export default function Serious() {
     ));
   };
 
-  // List of projects with arbitrary bullet points
+  // List of projects with bullet points and a URL property
   const projects = [
     {
       title: 'organregistry.org',
-      tools: "Three.js, WebGL, React, Flask, NoSQL",
+      tools: 'Three.js, WebGL, React, Flask, NoSQL',
       description: 'A music distribution platform for independent artists in San Diego. Integrates a custom ASCII-based rendering system in React.',
-      url: "https://organregistry.org/"
+      url: 'https://organregistry.org/'
     },
     {
       title: 'PillSnap',
       tools: 'React, Flask, Expo, Gemini, Vertex AI, Selenium, BeautifulSoup, Auth0',
       description: 'An application that uses computer vision to identify pills and provide drug interaction warnings. Won the MLH Best Use of Auth0 Award at DiamondHacks 2025.',
-      url: "https://pillsnap.tech/"
+      url: 'https://pillsnap.tech/'
     },
     {
       title: 'Kaibigang Pilipino',
       tools: 'React, SASS, Next.js, Supabase',
       description: 'Development for Kaibigang Pilipino, UC San Diego\'s Filipino-American Student Organization',
-      url: "https://www.kpucsd.com/"
+      url: 'https://www.kpucsd.com/'
     },
     {
       title: 'KSDT Radio Platform',
       tools: 'PHP, WordPress, CSS, React, Next.js',
       description: 'Development for KSDT Radio\'s live audio streaming and scheduling platform.',
-      url: "https://ksdt.ucsd.edu/"
+      url: 'https://ksdt.ucsd.edu/'
     },
   ];
 
+  // Function to render project cards as clickable elements
   const renderProjects = () => {
     return projects.map((project, index) => (
       <a
@@ -72,63 +73,68 @@ export default function Serious() {
 
   return (
     <div className="container">
-      <div className="header">
-        <h1>Shawn Pana</h1>
-        <h2>Software Engineer & <br></br> 
-          Machine Learning Developer</h2>
-      </div>
-
-      {/* Grid container for left (About + Contact) and right (Model) */}
-      <div className="about-container">
-        
-        {/* Left Column: About + Contact */}
-        <div className="about-content">
+      
+      {/* HERO SECTION: Left = title, About/Contact; Right = 3D Model */}
+      <div className="hero-section">
+        {/* Left Column */}
+        <div className="hero-left">
+          <h1>Shawn Pana</h1>
+          <h2>Software Engineer & <br /> Machine Learning Developer</h2>
+          
           <h2>About Me</h2>
           <p>
-            Mathematics-Computer Science and Music <br />
-            @ <a href="https://www.ucsd.edu"
-                  style={{ color: '#F1C500', textDecoration: 'none' }}
-                  target="_blank" rel="noopener noreferrer">
-                  UC San Diego
-               </a>
+            Mathematics-Computer Science and Music @{' '}
+            <a 
+              href="https://www.ucsd.edu"
+              style={{ color: '#F1C500', textDecoration: 'none' }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              UC San Diego
+            </a>
           </p>
 
           <h2>Contact Me</h2>
           <p>
-            Email me directly at 
-            {' '}
-            <a href="mailto:spana@ucsd.edu"
-               style={{ color: '#F1C500', textDecoration: 'none' }}
-               target="_blank" rel="noopener noreferrer">
+            Email me directly at{' '}
+            <a
+              href="mailto:spana@ucsd.edu"
+              style={{ color: '#F1C500', textDecoration: 'none' }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               spana@ucsd.edu
             </a>.
             <br />
-            You can also message me on 
-            {' '}
-            <a href="https://www.linkedin.com/in/shawnpana/"
-               style={{ color: '#0077B5', textDecoration: 'none' }}
-               target="_blank" rel="noopener noreferrer">
+            You can also message me on{' '}
+            <a
+              href="https://www.linkedin.com/in/shawnpana/"
+              style={{ color: '#0077B5', textDecoration: 'none' }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               LinkedIn
             </a>.
           </p>
         </div>
 
         {/* Right Column: 3D Model */}
-        <div className="about-model">
+        <div className="hero-right">
           <ShawnModel />
         </div>
       </div>
 
-
+      {/* Projects Section */}
       <div className="section">
         <h2>Projects</h2>
         <div className="projects-carousel-container">
-          <div className="projects-grid" ref={scrollRef}>
+          <div className="projects-grid">
             {renderProjects()}
           </div>
         </div>
       </div>
 
+      {/* Skills Section */}
       <div className="section">
         <h2>Skills</h2>
         <div className="skills-list">
