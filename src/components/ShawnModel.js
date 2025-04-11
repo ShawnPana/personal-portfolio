@@ -50,40 +50,73 @@
 //       }
 //     );
 
-//     // 4. Animation loop
+//     // 4. Setup dragging for manual rotation
+//     let isDragging = false;
+//     let previousX = 0;
+//     const rotationSpeed = 0.005; // Adjust sensitivity as needed
+
+//     const onPointerDown = (event) => {
+//       isDragging = true;
+//       // Support both mouse events and touch events
+//       previousX = event.clientX || (event.touches && event.touches[0].clientX);
+//     };
+
+//     const onPointerMove = (event) => {
+//       if (!isDragging) return;
+//       const currentX = event.clientX || (event.touches && event.touches[0].clientX);
+//       const deltaX = currentX - previousX;
+//       previousX = currentX;
+//       // Adjust the scene rotation by the pointer movement delta
+//       scene.rotation.y += deltaX * rotationSpeed;
+//     };
+
+//     const onPointerUp = () => {
+//       isDragging = false;
+//     };
+
+//     // Add the pointer event listeners to the mount container
+//     const currentMount = mountRef.current;
+//     currentMount.addEventListener('pointerdown', onPointerDown);
+//     currentMount.addEventListener('pointermove', onPointerMove);
+//     currentMount.addEventListener('pointerup', onPointerUp);
+//     // Also listen to pointer cancellation (e.g., pointer leaving the area)
+//     currentMount.addEventListener('pointerleave', onPointerUp);
+
+//     // 5. Animation loop with auto-rotation when not dragging
 //     const animate = () => {
 //       requestAnimationFrame(animate);
-//       // Optional: rotate the scene for dynamic effect
-//       scene.rotation.y += 0.01;
-      
+//       if (!isDragging) {
+//         scene.rotation.y += 0.01; // Auto-rotate when not interacting
+//       }
 //       renderer.render(scene, camera);
 //     };
 //     animate();
 
-//     // 5. Cleanup on component unmount
-//     const currentMount = mountRef.current;
+//     // 6. Cleanup on component unmount
 //     return () => {
-//       cancelAnimationFrame(animate);
+//       currentMount.removeEventListener('pointerdown', onPointerDown);
+//       currentMount.removeEventListener('pointermove', onPointerMove);
+//       currentMount.removeEventListener('pointerup', onPointerUp);
+//       currentMount.removeEventListener('pointerleave', onPointerUp);
 //       renderer.dispose();
-//       if (currentMount) {
+//       if (currentMount.contains(renderer.domElement)) {
 //         currentMount.removeChild(renderer.domElement);
 //       }
 //     };
 //   }, []);
 
 //   return (
-//     <a href="https://www.youtube.com/watch?v=rXZogPbVo9o&list=OLAK5uy_lHsqJ6eXUj1us_CHXU53wVlalb48GIAWE&index=5" target="_blank" rel="noopener noreferrer" style={{ width: '50%', height: '100%' }}>
 //         <div
-//             style={{
+//         style={{
 //             width: '100%',
 //             height: '100%',
 //             display: 'flex',
 //             justifyContent: 'center',
 //             alignItems: 'center',
-//             }}
-//             ref={mountRef}
+//             cursor: 'grab',
+//         }}
+//         ref={mountRef}
 //         />
-//     </a>
 //   );
 // };
 
@@ -141,14 +174,17 @@ const ShawnModel = () => {
       }
     );
 
-    // 4. Setup dragging for manual rotation
+    // 4. Setup dragging for manual rotation with velocity
     let isDragging = false;
     let previousX = 0;
+    let velocity = 0;
     const rotationSpeed = 0.005; // Adjust sensitivity as needed
+    const autoRotation = 0.01;   // Constant auto-rotation amount
+    const friction = 0.95;       // Friction factor to gradually reduce velocity
 
     const onPointerDown = (event) => {
       isDragging = true;
-      // Support both mouse events and touch events
+      // Support both mouse and touch events
       previousX = event.clientX || (event.touches && event.touches[0].clientX);
     };
 
@@ -157,12 +193,15 @@ const ShawnModel = () => {
       const currentX = event.clientX || (event.touches && event.touches[0].clientX);
       const deltaX = currentX - previousX;
       previousX = currentX;
-      // Adjust the scene rotation by the pointer movement delta
+      // Update the velocity based on the pointer movement
+      velocity = deltaX * rotationSpeed;
+      // Rotate the scene by the delta amount during dragging
       scene.rotation.y += deltaX * rotationSpeed;
     };
 
     const onPointerUp = () => {
       isDragging = false;
+      // When dragging stops, the current velocity remains and will be applied during the animate loop
     };
 
     // Add the pointer event listeners to the mount container
@@ -170,14 +209,16 @@ const ShawnModel = () => {
     currentMount.addEventListener('pointerdown', onPointerDown);
     currentMount.addEventListener('pointermove', onPointerMove);
     currentMount.addEventListener('pointerup', onPointerUp);
-    // Also listen to pointer cancellation (e.g., pointer leaving the area)
     currentMount.addEventListener('pointerleave', onPointerUp);
 
-    // 5. Animation loop with auto-rotation when not dragging
+    // 5. Animation loop with inertia and auto-rotation when not dragging
     const animate = () => {
       requestAnimationFrame(animate);
       if (!isDragging) {
-        scene.rotation.y += 0.01; // Auto-rotate when not interacting
+        // Apply any residual velocity plus a constant auto-rotation
+        scene.rotation.y += velocity + autoRotation;
+        // Reduce the velocity over time for a smooth, natural deceleration
+        velocity *= friction;
       }
       renderer.render(scene, camera);
     };
@@ -197,17 +238,17 @@ const ShawnModel = () => {
   }, []);
 
   return (
-        <div
-        style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            cursor: 'grab',
-        }}
-        ref={mountRef}
-        />
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        cursor: 'grab',
+      }}
+      ref={mountRef}
+    />
   );
 };
 
