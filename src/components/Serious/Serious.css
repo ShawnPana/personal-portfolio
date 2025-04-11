@@ -1,234 +1,225 @@
 /* Reset default browser styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #fff;
-    padding: 0;
-    font-size: 16px;
-  }
-  
-  /* Container for all content - centered on page with a maximum width */
-  .container {
-    max-width: 700px; /* Narrower container like roseyu.com */
-    margin: 0 auto; /* This centers the container horizontally */
-    padding: 80px 40px;
-  }
-  
-  /* All text content will be left-aligned within the centered container */
-  .header, 
-  .section, 
-  .project-card, 
-  .about p {
-    text-align: left;
-  }
-  
-  /* Header styles */
-  .header {
-    margin-bottom: 60px;
-  }
-  
-  .header h1 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #000;
-  }
-  
-  .header h2 {
-    font-size: 18px;
-    font-weight: 400;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* Section styles */
-  .section {
-    margin-bottom: 70px;
-  }
-  
-  .section h2 {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 25px;
-    color: #000;
-    position: relative;
-  }
-  
-  .section h2::after {
-    content: "";
-    display: block;
-    height: 1px;
-    width: 100%;
-    background-color: #eee;
-    margin-top: 10px;
-  }
-  
-  /* About section */
-  .about {
-    margin-bottom: 50px;
-  }
-  
-  .about p {
-    margin-bottom: 20px;
-    font-size: 16px;
-    line-height: 1.7;
-    color: #444;
-  }
-  
-  /* Projects section */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  
-  .project-card {
-    margin-bottom: 10px;
-    transition: transform 0.2s ease;
-  }
-  
-  .project-card:hover {
-    transform: translateY(-3px);
-  }
-  
-  .project-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #000;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .project-card p {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 15px;
-    line-height: 1.7;
-    color: #555;
+body {
+  font-family: JetBrains Mono, monospace, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #000; /* Dark background */
+  padding: 0;
+  font-size: 16px;
+}
+
+/* Container for all content - centered on page with a maximum width */
+.container {
+  max-width: 1000px; /* Makes the container wider for large screens */
+  margin: 0 auto;
+  padding: 40px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Header styles */
+.header {
+  margin-bottom: 60px;
+  color: white;
+  text-align: left;
+}
+
+.header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.header h2 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #ccc;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Two-column layout for About & Contact (left) and Model (right) */
+.about-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* Two equal columns (50% each) */
+  gap: 2rem;                     /* Horizontal gap between columns */
+  margin-bottom: 70px;
+}
+
+/* Left Column: About & Contact Content */
+.about-content {
+  display: flex;
+  flex-direction: column;
+  /* NEW: Increase the gap to provide more vertical spacing 
+     between “About Me” and “Contact Me” */
+  gap: 4rem; 
+}
+
+/* NEW: Reintroduce lines under the headings in about-content */
+.about-content h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  position: relative; /* For pseudo-element positioning */
+  margin-bottom: 0.5rem;
+}
+
+.about-content h2::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;         /* or 50%, if you only want a half-width line */
+  background-color: #fff;
+  margin-top: 8px;
+}
+
+/* Increase space between heading and subsequent text */
+.about-content p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ccc;
+}
+
+/* Right Column: Model Container */
+.about-model {
+  width: 100%;
+  height: 400px; /* Set the height for your 3D model container */
+}
+
+/* Section styles for other sections */
+.section {
+  margin-bottom: 70px;
+  text-align: left;
+}
+
+.section h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #fff; /* Light heading text */
+  position: relative;
+}
+
+.section h2::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%; /* Full width underline */
+  background-color: #fff;
+  margin-top: 10px;
+}
+
+/* Projects carousel wrapper */
+.projects-carousel-container {
+  position: relative;
+  overflow: visible; /* Allows glow and effects to extend beyond the container */
+}
+
+/* Projects grid with responsive layout */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;   /* Equal spacing both horizontally and vertically */
+  padding: 0 10px;
+  margin-top: 20px;
+}
+
+/* Project card styles */
+.project-card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeIn 0.6s ease-out forwards;
+  margin-bottom: 0; /* Let the grid gap handle spacing */
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(241, 197, 0, 0.8); /* Glowing effect in UCSD Gold */
+}
+
+.project-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.project-card p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ccc;
+}
+
+.project-card .tools {
+  font-size: 14px;
+  color: #bbb;
+  margin-top: 10px;
+}
+
+/* Bullet point styling for project paragraphs */
+.project-card p.bullet {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #bbb;
+}
+
+.project-card p.bullet::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #888;
+}
+
+/* Skills section */
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-start;
+}
+
+.skill-tag {
+  font-size: 14px;
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+  background-color: #eee;
+  color: #333;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  .about-container {
+    grid-template-columns: 1fr;  /* Stack content vertically */
   }
   
-  .project-card p::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: #888;
+  .about-model {
+    width: 100%;
+    height: 100%;
   }
-  
-  /* Bullet point styling */
-  .project-card ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  
-  .project-card ul li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-size: 15px;
-    line-height: 1.7;
-    color: #555;
-  }
-  
-  .project-card ul li::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    color: #888;
-  }
-  
-  /* Special styling for the tools list item */
-  .project-card ul li .tools {
-    font-size: 14px;
-    color: #888;
-    font-family: monospace;
-  }
-  
-  /* Skills section */
-  .skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-    justify-content: flex-start; /* Ensures skills tags start from the left */
-  }
-  
-  .skill-tag {
-    font-size: 14px;
-    background-color: #f5f5f5;
-    color: #666;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-weight: 400;
-    transition: all 0.2s ease;
-  }
-  
-  .skill-tag:hover {
-    background-color: #eee;
-    color: #333;
-  }
-  
-  /* Responsive adjustments */
-  @media (min-width: 768px) {
-    .header h1 {
-      font-size: 36px;
-    }
-    
-    body {
-      font-size: 16px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .container {
-      padding: 60px 20px;
-    }
-    
-    .header h1 {
-      font-size: 28px;
-    }
-    
-    .header h2 {
-      font-size: 16px;
-    }
-    
-    .section h2 {
-      font-size: 20px;
-    }
-    
-    .project-card ul li {
-      padding-left: 15px;
-    }
-  }
-  
-  /* Additional styles inspired by roseyu.com */
-  a {
-    color: #000;
-    text-decoration: none;
-    border-bottom: 1px solid #ddd;
-    transition: border-color 0.2s ease;
-  }
-  
-  a:hover {
-    border-bottom-color: #000;
-  }
-  
-  /* Add subtle animations */
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .container {
-    animation: fadeIn 0.6s ease-out;
-  }
-  
-  .project-card, .skill-tag {
-    animation: fadeIn 0.6s ease-out forwards;
-  }
+}
