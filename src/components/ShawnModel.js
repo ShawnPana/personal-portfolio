@@ -41,7 +41,7 @@ const ShawnModel = () => {
         scene.add(model);
 
         // Adjust model position and scale for optimal display
-        model.position.set(0, -0.3, 0);
+        model.position.set(0, -0.2, 0);
         model.scale.set(1.2, 1.2, 1.2);
       },
       undefined,
@@ -73,8 +73,14 @@ const ShawnModel = () => {
 
   return (
     <div
-      style={{ width: '100%', height: '100%' }} // This should match .hero-right dimensions in CSS
-      ref={mountRef}
+    style={{
+        width: '50%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }}
+    ref={mountRef}
     />
   );
 };

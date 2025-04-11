@@ -1,4 +1,4 @@
-/* Reset default browser styles */
+Reset default browser styles
 * {
   margin: 0;
   padding: 0;
@@ -47,11 +47,11 @@ body {
 /* HERO SECTION: Two-column layout for left (Title, About, Contact) and right (Model) */
 .hero-section {
   display: grid;
-  grid-template-columns: 1fr 1fr;  /* Two equal columns (50% each) */
-  gap: 2rem;                     /* Horizontal gap between columns */
-  margin-bottom: 35px;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
   margin-top: 35px;
-  align-items: stretch;          /* Stretch both columns to the same height */
+  margin-bottom: 35px;
+  align-items: stretch;
 }
 
 /* Right Column: 3D Model Container */
@@ -76,6 +76,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2rem; /* Adjust gap as needed */
+
   /* This container will take the full width of its parent */
 }
 
