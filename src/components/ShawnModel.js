@@ -72,16 +72,18 @@ const ShawnModel = () => {
   }, []);
 
   return (
-    <div
-    style={{
-        width: '50%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }}
-    ref={mountRef}
-    />
+    <a href="https://www.youtube.com/watch?v=rXZogPbVo9o&list=OLAK5uy_lHsqJ6eXUj1us_CHXU53wVlalb48GIAWE&index=5" target="_blank" rel="noopener noreferrer" style={{ width: '50%', height: '100%' }}>
+        <div
+            style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            }}
+            ref={mountRef}
+        />
+    </a>
   );
 };
 
