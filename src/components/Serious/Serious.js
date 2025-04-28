@@ -37,6 +37,12 @@ export default function Serious() {
       url: 'https://devpost.com/software/pill-snap?_gl=1*jwtjab*_gcl_au*MTU4MzI4NTMxMS4xNzQzOTA4NDgx*_ga*MTIwMjIxNjE3MC4xNzQzOTA4NDgx*_ga_0YHJK3Y10M*MTc0NDM0ODEwMi40LjEuMTc0NDM0ODExMC4wLjAuMA..'
     },
     {
+      title: 'MATES (Interactive Demo)',
+      tools: 'React, Flask, BeautifulSoup4, Gemini',
+      description: 'An application that helps SDSU students discover on-campus event recommendations while connecting them with like-minded peers. Won Most Technical Project award at the 2025 Innovate 4 SDSU Hackathon.',
+      url: 'https://mates-alpha.vercel.app/'
+    },
+    {
       title: 'Kaibigang Pilipino',
       tools: 'React, SASS, Next.js, Supabase',
       description: 'Development for Kaibigang Pilipino, UC San Diego\'s Filipino-American Student Organization',
@@ -47,7 +53,7 @@ export default function Serious() {
       tools: 'PHP, WordPress, CSS, React, Next.js',
       description: 'Development for KSDT Radio\'s live audio streaming and scheduling platform.',
       url: 'https://ksdt.ucsd.edu/'
-    },
+    }
   ];
 
   // Function to render project cards as clickable elements
