@@ -43,6 +43,12 @@ export default function Serious() {
       url: 'https://mates-alpha.vercel.app/'
     },
     {
+      title: 'CiteTrace',
+      tools: 'React Native, Flask, Expo, Gemini, Intel Tiber, Supabase, RAG',
+      description: 'An application that transforms your collection of academic works into an interactive knowledge graph that intuitively visualizes, interprets, and connects hundreds of pages of research letting you explore document relationships and access AI-powered summaries in minutes.',
+      url: 'https://devpost.com/software/inciteful'
+    },
+    {
       title: 'Kaibigang Pilipino',
       tools: 'React, SASS, Next.js, Supabase',
       description: 'Development for Kaibigang Pilipino, UC San Diego\'s Filipino-American Student Organization',
