@@ -5,13 +5,13 @@ import ShawnModel from '../ShawnModel.js';
 export default function Serious() {
   // List of skills
   const skills = [
-    'Python', 'PyTorch', 'JavaScript', 'TypeScript', 'React', 'Next.js', 'Flask', 
-    'C++', 'C', 'Java', 'PHP', 'WordPress', 'CSS', 'SASS', 'Figma', 'Docker', 
+    'Python', 'PyTorch', 'JavaScript', 'TypeScript', 'React', 'React Native', 'Next.js', 'Flask', 
+    'FastAPI', 'Vite', 'C++', 'C', 'Java', 'PHP', 'WordPress', 'CSS', 'SASS', 'Figma', 'Docker', 
     'Git', 'GitHub', 'GitHub Actions CI', 'GitHub Project', 'Expo', 'Vercel', 
-    'Auth0', 'Supabase', 'Google Sheets API', 'Spotify API', 'Amazon S3', 
+    'Auth0', 'Supabase', 'pgVector', 'Google Sheets API', 'Spotify API', 'Amazon S3', 
     'NoSQL', 'Three.js', 'WebGL', 'Scikit-Learn', 'XGBoost', 'Pandas', 'NumPy', 
-    'Gemini', 'Vertex AI', 'Selenium', 'BeautifulSoup', 'Machine Learning', 
-    'Deep Learning', 'LSTM', 'RNN', 'BERT', 'OpenBCI', 'Android Studio', 'JUnit', 
+    'Gemini', 'Claude', 'LangChain', 'Vertex AI', 'Selenium', 'BeautifulSoup', 'Machine Learning', 
+    'Deep Learning', 'LSTM', 'RNN', 'BERT', 'RAG', 'OpenBCI', 'Android Studio', 'JUnit', 
     'Android', 'Robolectric', 'Agile'
   ];
 
@@ -47,6 +47,18 @@ export default function Serious() {
       tools: 'React Native, Flask, Expo, Gemini, Intel Tiber, Supabase, RAG',
       description: 'An application that transforms your collection of academic works into an interactive knowledge graph that intuitively visualizes, interprets, and connects hundreds of pages of research letting you explore document relationships and access AI-powered summaries in minutes.',
       url: 'https://devpost.com/software/inciteful'
+    },
+    {
+      title: 'SFGovTV++',
+      tools: 'Vite, React, FastAPI, Supabase, pgVector, Gemini, Claude, LangChain, BeautifulSoup4',
+      description: 'Transforms San Francisco Board of Supervisors meetings into an interactive, searchable video experience with AI-generated summaries and advanced navigation. Won 3rd place at SF10x Hackathon.',
+      url: 'https://devpost.com/software/your-city-hall-digest-san-francisco'
+    },
+    {
+      title: 'Bouncer',
+      tools: 'React Native, TypeScript, Expo, Flask, Claude, Gemini, Supabase, Vercel',
+      description: 'Comprehensive risk assessment platform for databases using publicly available information, providing detailed risk-level reports and access control insights for database owners.',
+      url: 'https://devpost.com/software/bouncer-7cvsgz'
     },
     {
       title: 'Kaibigang Pilipino',
