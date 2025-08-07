@@ -6,13 +6,13 @@ export default function Serious() {
   // List of skills
   const skills = [
     'Python', 'PyTorch', 'JavaScript', 'TypeScript', 'React', 'React Native', 'Next.js', 'Flask', 
-    'FastAPI', 'Vite', 'C++', 'C', 'Java', 'PHP', 'WordPress', 'CSS', 'SASS', 'Figma', 'Docker', 
-    'Git', 'GitHub', 'GitHub Actions CI', 'GitHub Project', 'Expo', 'Vercel', 
-    'Auth0', 'Supabase', 'pgVector', 'Google Sheets API', 'Spotify API', 'Amazon S3', 
+    'FastAPI', 'Vite', 'C++', 'C', 'Java', 'PHP', 'WordPress', 'SASS', 'Docker', 
+    'GitHub', 'Expo', 'Vercel', 
+    'Auth0', 'Supabase', 'Amazon S3', 
     'NoSQL', 'Three.js', 'WebGL', 'Scikit-Learn', 'XGBoost', 'Pandas', 'NumPy', 
-    'Gemini', 'Claude', 'LangChain', 'Vertex AI', 'Selenium', 'BeautifulSoup', 'Machine Learning', 
-    'Deep Learning', 'LSTM', 'RNN', 'BERT', 'RAG', 'OpenBCI', 'Android Studio', 'JUnit', 
-    'Android', 'Robolectric', 'Agile'
+    'Gemini', 'Claude', 'LangChain', 'Vertex AI', 'Selenium', 'BeautifulSoup', 
+    'LSTM', 'RNN', 'RAG', 'OpenBCI', 'JUnit', 
+    'Android', 'Agile', 'Librosa', 'Google Cloud Run'
   ];
 
   // Function to render skill tags
