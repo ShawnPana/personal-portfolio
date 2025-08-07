@@ -48,7 +48,7 @@ export default function Serious() {
     {
       title: 'CiteTrace',
       tools: 'React Native, Flask, Expo, Gemini, Intel Tiber, Supabase, RAG',
-      description: 'An application that transforms your collection of academic works into an interactive knowledge graph that intuitively visualizes, interprets, and connects hundreds of pages of research letting you explore document relationships and access AI-powered summaries in minutes.',
+      description: 'An application that transforms your collection of academic works into an interactive knowledge graph that intuitively visualizes, interprets, and connects hundreds of pages of research letting you explore document relationships and access AI-powered summaries in minutes. Won First Place at Intel Hack 2025.',
       url: 'https://devpost.com/software/inciteful',
       hackathonWinner: true
     },
@@ -131,28 +131,29 @@ export default function Serious() {
             <div className="info-item">
               <h2>About Me</h2>
               <p>
-                {/* Wrap the clickable text in a span with onClick handler */}
-                <span 
-                  style={{ textDecoration: 'none', cursor: 'pointer' }} 
-                  onClick={scrollToProjects}
-                >
-                  Mathematics-Computer Science
-                </span>{' '}
-                and <a 
+                Mathematics-Computer Science and <a 
                   href="https://www.youtube.com/watch?v=rXZogPbVo9o&list=OLAK5uy_lHsqJ6eXUj1us_CHXU53wVlalb48GIAWE&index=5" 
                   style={{ color: '#C25A3C', textDecoration: 'none' }}
                   target="_blank" 
                   rel="noopener noreferrer"
                 >Music</a> <br />
-                @{' '}
-                <a 
+                @ <a 
                   href="https://www.ucsd.edu" 
                   style={{ color: '#F1C500', textDecoration: 'none' }}
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
                   UC San Diego
-                </a>
+                </a>. <br />
+                R&D Intern at Recor Medical. <br />
+                4x <a 
+                  href="https://devpost.com/ShawnPana" 
+                  style={{ color: '#003E54', textDecoration: 'none' }}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Hackathon
+                </a> Winner.
               </p>
             </div>
 
@@ -177,6 +178,14 @@ export default function Serious() {
                   rel="noopener noreferrer"
                 >
                   LinkedIn
+                </a>{' '}or{' '}
+                <a 
+                  href="https://x.com/shawn_pana" 
+                  style={{ color: '#E1E8ED', textDecoration: 'none' }}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  X
                 </a>.
               </p>
             </div>
