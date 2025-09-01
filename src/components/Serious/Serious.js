@@ -25,11 +25,18 @@ export default function Serious() {
   // List of projects with bullet points and a URL property
   const projects = [
     {
-      title: 'organregistry.org',
-      tools: 'Three.js, WebGL, React, Flask, NoSQL',
-      description: 'A music distribution platform for independent artists in San Diego. Integrates a custom ASCII-based rendering system in React.',
-      url: 'https://organregistry.org/',
-      hackathonWinner: false
+      title: 'BetterWeb',
+      tools: 'React, TypeScript, Python, Browser Use, Claude API, Convex, Vite',
+      description: 'Chrome extension that uses browser agents to persistently transform any website\'s CSS using natural language, enabling personalized styling and WCAG-compliant accessibility improvements across all web pages.',
+      url: 'https://github.com/Cheggin/YC-Agents-Hackathon',
+      hackathonWinner: true
+    },
+    {
+      title: 'SFGovTV++',
+      tools: 'Vite, React, FastAPI, Supabase, pgVector, Gemini, Claude, LangChain, BeautifulSoup4',
+      description: 'Transforms San Francisco Board of Supervisors meetings into an interactive, searchable video experience with AI-generated summaries and advanced navigation. Won 3rd place at SF10x Hackathon.',
+      url: 'https://devpost.com/software/your-city-hall-digest-san-francisco',
+      hackathonWinner: true
     },
     {
       title: 'PillSnap',
@@ -53,17 +60,17 @@ export default function Serious() {
       hackathonWinner: true
     },
     {
-      title: 'SFGovTV++',
-      tools: 'Vite, React, FastAPI, Supabase, pgVector, Gemini, Claude, LangChain, BeautifulSoup4',
-      description: 'Transforms San Francisco Board of Supervisors meetings into an interactive, searchable video experience with AI-generated summaries and advanced navigation. Won 3rd place at SF10x Hackathon.',
-      url: 'https://devpost.com/software/your-city-hall-digest-san-francisco',
-      hackathonWinner: true
-    },
-    {
       title: 'Bouncer',
       tools: 'React Native, TypeScript, Expo, Flask, Claude, Gemini, Supabase, Vercel',
       description: 'Comprehensive risk assessment platform for databases using publicly available information, providing detailed risk-level reports and access control insights for database owners.',
       url: 'https://devpost.com/software/bouncer-7cvsgz',
+      hackathonWinner: false
+    },
+    {
+      title: 'organregistry.org',
+      tools: 'Three.js, WebGL, React, Flask, NoSQL',
+      description: 'A music distribution platform for independent artists in San Diego. Integrates a custom ASCII-based rendering system in React.',
+      url: 'https://organregistry.org/',
       hackathonWinner: false
     },
     {
