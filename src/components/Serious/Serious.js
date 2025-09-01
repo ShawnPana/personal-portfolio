@@ -39,6 +39,13 @@ export default function Serious() {
       hackathonWinner: true
     },
     {
+      title: 'CiteTrace',
+      tools: 'React Native, Flask, Expo, Gemini, Intel Tiber, Supabase, RAG',
+      description: 'An application that transforms your collection of academic works into an interactive knowledge graph that intuitively visualizes, interprets, and connects hundreds of pages of research letting you explore document relationships and access AI-powered summaries in minutes. Won First Place at Intel Hack 2025.',
+      url: 'https://devpost.com/software/inciteful',
+      hackathonWinner: true
+    },
+    {
       title: 'PillSnap',
       tools: 'React, Flask, Expo, Gemini, Vertex AI, Selenium, BeautifulSoup, Auth0',
       description: 'An application that uses computer vision to identify pills and provide drug interaction warnings. Won the MLH Best Use of Auth0 Award at DiamondHacks 2025.',
@@ -50,13 +57,6 @@ export default function Serious() {
       tools: 'React, Flask, BeautifulSoup4, Gemini',
       description: 'An application that helps SDSU students discover on-campus event recommendations while connecting them with like-minded peers. Won Most Technical Project award at the 2025 Innovate 4 SDSU Hackathon.',
       url: 'https://mates-alpha.vercel.app/',
-      hackathonWinner: true
-    },
-    {
-      title: 'CiteTrace',
-      tools: 'React Native, Flask, Expo, Gemini, Intel Tiber, Supabase, RAG',
-      description: 'An application that transforms your collection of academic works into an interactive knowledge graph that intuitively visualizes, interprets, and connects hundreds of pages of research letting you explore document relationships and access AI-powered summaries in minutes. Won First Place at Intel Hack 2025.',
-      url: 'https://devpost.com/software/inciteful',
       hackathonWinner: true
     },
     {
@@ -88,6 +88,9 @@ export default function Serious() {
       hackathonWinner: false
     }
   ];
+
+  // Count hackathon wins
+  const hackathonWinCount = projects.filter(project => project.hackathonWinner).length;
 
   // Function to render project cards as clickable elements
   const renderProjects = () => {
@@ -153,7 +156,7 @@ export default function Serious() {
                   UC San Diego
                 </a>. <br />
                 R&D Intern at Recor Medical. <br />
-                4x <a 
+                {hackathonWinCount}x <a 
                   href="https://devpost.com/ShawnPana" 
                   style={{ color: '#003E54', textDecoration: 'none' }}
                   target="_blank" 
