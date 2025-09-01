@@ -1,0 +1,38 @@
+{
+  "ServiceName": "${APP_RUNNER_SERVICE_NAME}",
+  "SourceConfiguration": {
+    "AuthenticationConfiguration": {
+      "AccessRoleArn": "arn:aws:iam::${AWS_ACCOUNT_ID}:role/AppRunnerECRAccessRole"
+    },
+    "AutoDeploymentsEnabled": false,
+    "ImageRepository": {
+      "ImageIdentifier": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}:latest",
+      "ImageRepositoryType": "ECR",
+      "ImageConfiguration": {
+        "Port": "${PORT}",
+        "RuntimeEnvironmentVariables": {
+          "PORT": "${PORT}",
+          "PYTHONUNBUFFERED": "1"
+        }
+      }
+    }
+  },
+  "HealthCheckConfiguration": {
+    "Protocol": "HTTP",
+    "Path": "/health",
+    "Interval": 10,
+    "Timeout": 5,
+    "HealthyThreshold": 1,
+    "UnhealthyThreshold": 5
+  },
+  "InstanceConfiguration": {
+    "Cpu": "1 vCPU",
+    "Memory": "2 GB"
+  },
+  "Tags": [
+    {
+      "Key": "Name",
+      "Value": "${APP_RUNNER_SERVICE_NAME}"
+    }
+  ]
+}
