@@ -5,13 +5,13 @@ import ShawnModel from '../ShawnModel.js';
 export default function Serious() {
   // List of skills
   const skills = [
-    'Python', 'PyTorch', 'JavaScript', 'TypeScript', 'React', 'React Native', 'Next.js', 'Flask', 
-    'FastAPI', 'Vite', 'C++', 'C', 'Java', 'PHP', 'WordPress', 'SASS', 'Docker', 
-    'GitHub', 'Expo', 'Vercel', 
-    'Auth0', 'Supabase', 'Amazon S3', 
-    'NoSQL', 'Three.js', 'WebGL', 'Scikit-Learn', 'XGBoost', 'Pandas', 'NumPy', 
-    'Gemini', 'Claude', 'LangChain', 'Vertex AI', 'Selenium', 'BeautifulSoup', 
-    'LSTM', 'RNN', 'RAG', 'OpenBCI', 'JUnit', 
+    'Python', 'PyTorch', 'JavaScript', 'TypeScript', 'React', 'React Native', 'Next.js', 'Flask',
+    'FastAPI', 'Pydantic', 'Vite', 'C++', 'C', 'Java', 'PHP', 'WordPress', 'SASS', 'Docker',
+    'GitHub', 'Expo', 'Vercel',
+    'Auth0', 'Supabase', 'Amazon S3',
+    'NoSQL', 'Three.js', 'WebGL', 'Scikit-Learn', 'XGBoost', 'Pandas', 'NumPy',
+    'Gemini', 'Claude', 'Browser Use', 'LangChain', 'Vertex AI', 'Selenium', 'BeautifulSoup',
+    'LSTM', 'RNN', 'RAG', 'OpenBCI', 'JUnit',
     'Android', 'Agile', 'Librosa', 'Google Cloud Run'
   ];
 
@@ -24,6 +24,27 @@ export default function Serious() {
 
   // List of projects with bullet points and a URL property
   const projects = [
+    {
+      title: 'Resume Use',
+      tools: 'Python, FastAPI, Pydantic, Browser Use',
+      description: 'AI-powered resume platform that automatically generates tailored resumes and synchronizes updates across LinkedIn, Simplify, and other job platforms using Browser Use web agents.',
+      url: 'https://github.com/ShawnPana/resume-use',
+      hackathonWinner: false
+    },
+    {
+      title: 'Job Use',
+      tools: 'Python, FastAPI, Pydantic, Browser Use',
+      description: 'Automated job application system that leverages Browser Use web agents to apply for positions across multiple platforms using candidate work experience and project data.',
+      url: 'https://github.com/Cheggin/Job-Use',
+      hackathonWinner: true
+    },
+    {
+      title: 'News Use',
+      tools: 'Python, FastAPI, Browser Use',
+      description: 'Personalized news aggregation platform that uses Browser Use web agents to search major news outlets (NYT, Washington Post) based on user queries and delivers AI-generated summaries.',
+      url: 'https://github.com/Cheggin/news-use',
+      hackathonWinner: false
+    },
     {
       title: 'BetterWeb',
       tools: 'React, TypeScript, Python, Browser Use, Claude API, Convex, Vite',
@@ -141,25 +162,30 @@ export default function Serious() {
             <div className="info-item">
               <h2>About Me</h2>
               <p>
-                Mathematics-Computer Science and <a 
-                  href="https://www.youtube.com/watch?v=rXZogPbVo9o&list=OLAK5uy_lHsqJ6eXUj1us_CHXU53wVlalb48GIAWE&index=5" 
+                Mathematics-Computer Science and <a
+                  href="https://www.youtube.com/watch?v=rXZogPbVo9o&list=OLAK5uy_lHsqJ6eXUj1us_CHXU53wVlalb48GIAWE&index=5"
                   style={{ color: '#C25A3C', textDecoration: 'none' }}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >Music</a> <br />
-                @ <a 
-                  href="https://www.ucsd.edu" 
+                @ <a
+                  href="https://www.ucsd.edu"
                   style={{ color: '#F1C500', textDecoration: 'none' }}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   UC San Diego
                 </a>. <br />
-                R&D Intern at Recor Medical. <br />
-                {hackathonWinCount}x <a 
-                  href="https://devpost.com/ShawnPana" 
+                Growth Engineer at <a
+                  href="https://github.com/browser-use/browser-use"
+                  style={{ color: '#6366f1', textDecoration: 'none' }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >Browser Use</a>. <br />
+                {hackathonWinCount}x <a
+                  href="https://devpost.com/ShawnPana"
                   style={{ color: '#003E54', textDecoration: 'none' }}
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   Hackathon
