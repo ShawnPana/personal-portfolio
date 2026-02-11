@@ -1,0 +1,217 @@
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: JetBrains Mono, monospace, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #000; /* Dark background */
+  padding: 0;
+  font-size: 16px;
+}
+
+/* Container for all content - centered on page with a maximum width */
+.container {
+  max-width: 1000px; /* Makes the container wider for large screens */
+  margin: 0 auto;
+  padding: 40px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Header styles (these remain full width) */
+.header {
+  margin-bottom: 60px;
+  color: white;
+  text-align: left;
+}
+
+.header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.header h2 {
+  font-size: 18px;
+  font-weight: 400;
+  color: #ccc;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* HERO SECTION: Two-column layout for left (Title, About, Contact) and right (Model) */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 35px;
+  margin-bottom: 35px;
+  align-items: stretch;
+
+  min-height: 475px;
+}
+
+/* Right Column: 3D Model Container */
+.hero-right {
+  display: flex;                /* Use flexbox */
+  align-items: center;          /* Center vertically */
+  justify-content: center;      /* Center horizontally */
+  /* Optionally, remove any fixed height to allow stretching if needed */
+  /* height: auto; */
+}
+
+/* Left Column: Contains title, About Me and Contact Me */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  /* other styles as needed */
+}
+
+/* Container that holds the About Me and Contact Me pairs */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* Adjust gap as needed */
+
+  /* This container will take the full width of its parent */
+}
+
+/* Each item (About Me, Contact Me) as a unit */
+.info-item {
+  /* You can add padding/margin if needed */
+}
+
+/* Styling for headings inside each info-item */
+.info-item h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+/* Underline line for the headings */
+.info-item h2::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: #fff;
+  margin-top: 8px;
+}
+
+/* Styling for paragraphs inside each info-item */
+.info-item p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ccc;
+  margin: 0; /* Remove default margins for consistency */
+}
+
+
+/* Style the combined heading */
+.hero-left h1 {
+  font-size: 36px;
+  color: #fff;
+  margin-bottom: 0; /* Remove extra gap below h1 */
+}
+
+/* The subheading will be styled via a dedicated class */
+.hero-subheading {
+  font-size: 18px;  /* Subheading size */
+  color: #ccc;
+  margin-top: 0.5rem;  /* Space after the main title if desired */
+  display: block;
+}
+
+.hero-left h2 {
+  font-size: 18px;
+  color: #ccc;
+}
+
+/* Underlines for headings in hero-left */
+.hero-left h2::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: #fff;
+  margin-top: 8px;
+}
+
+/* Paragraphs in hero-left */
+.hero-left p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #ccc;
+}
+
+/* Section styles for Skills */
+.section {
+  margin-bottom: 70px;
+  text-align: left;
+}
+
+.section h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #fff;
+  position: relative;
+}
+
+.section h2::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: #fff;
+  margin-top: 10px;
+}
+
+/* Skills section */
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-start;
+}
+
+.skill-tag {
+  font-size: 14px;
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+  background-color: #eee;
+  color: #333;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  .hero-section {
+    grid-template-columns: 1fr;  /* Stack the hero content vertically */
+  }
+  
+  .hero-right {
+    height: 300px; /* Adjust as needed */
+  }
+}
