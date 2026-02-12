@@ -1,48 +1,137 @@
 #!/bin/bash
-# Test each route/tab of the portfolio with a separate browser-use agent
-# Routes: / (main portfolio), /Home (3D model), /tree (3D scene)
+# =============================================================================
+# Browser-Use Navbar Test Script
+# Tests each route/tab of the personal portfolio with separate browser-use agents
+#
+# Routes tested:
+#   1. / (main portfolio - Serious component: hero, projects, skills)
+#   2. /Home (3D interactive model page)
+#   3. /tree (3D tree/ocean scene)
+#
+# Prerequisites:
+#   - browser-use CLI installed (--remote-only)
+#   - cloudflared installed
+#   - npm dependencies installed
+#   - BROWSER_USE_API_KEY set (for `browser-use run` agent mode)
+#
+# Usage:
+#   ./test-navbar.sh
+# =============================================================================
 
 set -e
 
 export PATH="$HOME/.local/bin:$HOME/.browser-use-env/bin:$PATH"
 
-# Get the tunnel URL
-TUNNEL_URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' /tmp/cloudflared.log | head -1)
+# ---- Start dev server if not running ----
+if ! curl -s -o /dev/null -w "" http://localhost:3000 2>/dev/null; then
+  echo "[*] Starting React dev server on port 3000..."
+  cd /workspace && PORT=3000 npx react-scripts start &>/tmp/react-dev.log &
+  echo "[*] Waiting for dev server to be ready..."
+  for i in $(seq 1 30); do
+    if curl -s -o /dev/null http://localhost:3000 2>/dev/null; then
+      echo "[+] Dev server is ready!"
+      break
+    fi
+    sleep 2
+  done
+fi
+
+# ---- Start cloudflare tunnel if not running ----
+TUNNEL_URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' /tmp/cloudflared.log 2>/dev/null | head -1)
+if [ -z "$TUNNEL_URL" ]; then
+  echo "[*] Starting cloudflare tunnel..."
+  cloudflared tunnel --url http://localhost:3000 &>/tmp/cloudflared.log &
+  sleep 10
+  TUNNEL_URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' /tmp/cloudflared.log | head -1)
+fi
 
 if [ -z "$TUNNEL_URL" ]; then
-  echo "ERROR: No tunnel URL found. Make sure cloudflared is running."
+  echo "ERROR: No tunnel URL found. Check /tmp/cloudflared.log"
   exit 1
 fi
 
 echo "=========================================="
-echo "Tunnel URL: $TUNNEL_URL"
+echo " Portfolio Navbar Test - 3 Browser Agents"
+echo " Tunnel URL: $TUNNEL_URL"
 echo "=========================================="
 echo ""
 
-# Agent 1: Test the main portfolio page (/ route - Serious component)
-echo ">>> AGENT 1: Testing main portfolio page (/ route)..."
-browser-use run "Navigate to ${TUNNEL_URL}/ and test the main portfolio page. Verify you can see: 1) The hero section with 'Shawn Pana' heading and 'Software Engineer & Machine Learning Developer' subheading 2) The About Me section mentioning UC San Diego and Browser Use 3) The Contact Me section with email and LinkedIn links 4) The Projects section with project cards (like Resume Use, Job Use, News Use, BetterWeb, etc.) 5) The Skills section with skill tags. Scroll down to verify all sections load correctly. Take a screenshot at the top and after scrolling to the projects section." --max-steps 10 2>&1 | tee /tmp/agent1_result.txt
-echo ""
-echo ">>> AGENT 1 COMPLETE"
-echo ""
+# ---- Helper function for testing a route ----
+test_route() {
+  local SESSION_NAME="$1"
+  local ROUTE="$2"
+  local DESCRIPTION="$3"
+  local FULL_URL="${TUNNEL_URL}${ROUTE}"
 
-# Agent 2: Test the Home page (/Home route - 3D model page)
-echo ">>> AGENT 2: Testing Home page (/Home route)..."
-browser-use run "Navigate to ${TUNNEL_URL}/Home and test the 3D model page. This page has a loading overlay that says 'loading...' while 3D models load. Verify: 1) The page loads (you may see a loading screen initially) 2) After loading, there should be a 3D scene with a model of a person (Shawn) and various interactive 3D objects including a resume, LinkedIn logo, and a heart model. 3) The page has a dark/3D environment. Take a screenshot to document the state of the page." --max-steps 10 2>&1 | tee /tmp/agent2_result.txt
-echo ""
-echo ">>> AGENT 2 COMPLETE"
-echo ""
+  echo "============================================="
+  echo "AGENT [${SESSION_NAME}]: ${DESCRIPTION}"
+  echo "URL: ${FULL_URL}"
+  echo "============================================="
 
-# Agent 3: Test the Tree page (/tree route - 3D tree/ocean scene)
-echo ">>> AGENT 3: Testing tree page (/tree route)..."
-browser-use run "Navigate to ${TUNNEL_URL}/tree and test the 3D tree/ocean scene page. This page has a loading overlay that says 'loading...' while 3D models load. Verify: 1) The page loads (you may see a loading screen initially) 2) After loading, there should be a 3D scene with a tree model, ocean/water with reflections, a sky with stars, and floating text that says 'organregistry.org'. 3) The scene should have a night sky atmosphere. Take a screenshot to document the state of the page." --max-steps 10 2>&1 | tee /tmp/agent3_result.txt
-echo ""
-echo ">>> AGENT 3 COMPLETE"
-echo ""
+  # Navigate to the page
+  echo "[open] Navigating..."
+  browser-use --session "$SESSION_NAME" open "$FULL_URL" 2>&1
+
+  # Get initial page state (includes any errors)
+  echo ""
+  echo "[state] Page state:"
+  browser-use --session "$SESSION_NAME" state 2>&1
+
+  # Take screenshot with error overlay (if present)
+  echo ""
+  echo "[screenshot] Initial screenshot:"
+  browser-use --session "$SESSION_NAME" screenshot "/tmp/${SESSION_NAME}_initial.png" 2>&1
+
+  # Dismiss webpack dev server error overlay if present
+  echo ""
+  echo "[eval] Dismissing error overlay..."
+  browser-use --session "$SESSION_NAME" eval "var f=document.querySelector('iframe#webpack-dev-server-client-overlay'); if(f){f.remove();'removed overlay'}else{'no overlay found'}" 2>&1
+
+  # Evaluate page contents
+  echo ""
+  echo "[eval] Page evaluation:"
+  browser-use --session "$SESSION_NAME" eval "JSON.stringify({
+    title: document.title,
+    url: location.href,
+    rootHasChildren: document.querySelector('#root').childNodes.length > 0,
+    hasContainer: !!document.querySelector('.container'),
+    hasHeroSection: !!document.querySelector('.hero-section'),
+    hasProjectsGrid: !!document.querySelector('.projects-grid'),
+    hasSkillsList: !!document.querySelector('.skills-list'),
+    hasLoadingOverlay: !!document.querySelector('#loadingOverlay'),
+    hasCanvas: !!document.querySelector('canvas')
+  }, null, 2)" 2>&1
+
+  # Take clean screenshot
+  echo ""
+  echo "[screenshot] Clean screenshot:"
+  browser-use --session "$SESSION_NAME" screenshot "/tmp/${SESSION_NAME}_clean.png" 2>&1
+
+  # Get page title
+  echo ""
+  echo "[title] Page title:"
+  browser-use --session "$SESSION_NAME" get title 2>&1
+
+  # Close session
+  echo ""
+  echo "[close] Closing session..."
+  browser-use --session "$SESSION_NAME" close 2>&1
+
+  echo ""
+  echo "AGENT [${SESSION_NAME}] COMPLETE"
+  echo ""
+}
+
+# ---- Run 3 agents sequentially ----
+test_route "agent1" "/" "Testing main portfolio page (Serious component)"
+test_route "agent2" "/Home" "Testing Home page (3D model interactive)"
+test_route "agent3" "/tree" "Testing tree page (3D ocean/tree scene)"
 
 echo "=========================================="
-echo "ALL 3 AGENTS COMPLETE"
+echo " ALL 3 AGENTS COMPLETE"
+echo ""
+echo " Screenshots saved to /tmp/"
+echo "   - agent1_initial.png, agent1_clean.png (/ route)"
+echo "   - agent2_initial.png, agent2_clean.png (/Home route)"
+echo "   - agent3_initial.png, agent3_clean.png (/tree route)"
 echo "=========================================="
-
-# Cleanup
-browser-use close --all 2>/dev/null || true
