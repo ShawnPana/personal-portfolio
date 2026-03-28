@@ -138,10 +138,6 @@ export default function Serious() {
   // Create a ref for the projects section
   const projectsRef = useRef(null);
 
-  // Function to scroll to projects section
-  const scrollToProjects = () => {
-    projectsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   return (
     <div className="container">
