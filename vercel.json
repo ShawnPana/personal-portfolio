@@ -3,6 +3,13 @@
   "outputDirectory": "build",
   "installCommand": "npm install",
   "framework": "create-react-app",
+  "redirects": [
+    {
+      "source": "/smux/install.sh",
+      "destination": "https://raw.githubusercontent.com/ShawnPana/smux/main/install.sh",
+      "statusCode": 302
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
