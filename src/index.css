@@ -1,21 +1,251 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --bg: #0a0a0a;
+  --text: #f2f2f2;
+  --muted: #a3a3a3;
+  --faint: #6b6b6b;
+  --border: #262626;
+  --accent: #f1c500; /* UCSD gold */
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-/* 
-html,
-body,
-#root {
-  height: 100%;
+* {
   margin: 0;
-  background: #000000;
-} */
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Lock the page to the viewport — no scrolling, ever. */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Page: fills the viewport exactly, content scales to fit ---------- */
+.page {
+  height: 100vh;
+  height: 100dvh;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: clamp(12px, 4vh, 56px) clamp(20px, 6vw, 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* bunch content together, centered vertically */
+  overflow: hidden;
+  animation: fade-in 0.5s ease-out;
+}
+
+/* ---------- Top bar: icon + (name over handle) ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 3vw, 18px);
+}
+
+.id {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* ---------- Portrait (avatar + optional 3D model) ---------- */
+.portrait {
+  position: relative;
+  width: clamp(58px, 9.5vh, 78px);
+  height: clamp(58px, 9.5vh, 78px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.02);
+  background: #111; /* dark backdrop for the (transparent) 3D model */
+  flex-shrink: 0;
+}
+
+.avatar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.4s ease;
+}
+
+/* Hide the photo once the 3D model has rendered, so they don't overlap. */
+.avatar-hidden {
+  opacity: 0;
+}
+
+.model-canvas {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: pan-y;
+  transition: opacity 0.5s ease;
+}
+
+.model-canvas:active {
+  cursor: grabbing;
+}
+
+.model-canvas canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ---------- Hero ---------- */
+h1 {
+  font-size: clamp(21px, min(6.5vw, 4vh), 32px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.handle {
+  margin-top: 2px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(12px, min(3.4vw, 1.9vh), 14px);
+  transition: color 0.15s ease;
+}
+
+.handle:hover {
+  color: var(--accent);
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: clamp(11px, min(3.2vw, 2vh), 16px);
+  margin-top: clamp(3px, 0.8vh, 8px);
+}
+
+/* ---------- Story ---------- */
+.story {
+  margin-top: clamp(12px, 3vh, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(7px, 1.7vh, 18px);
+  color: var(--muted);
+  font-size: clamp(12px, min(2.7vw, 2vh), 15px);
+  line-height: 1.75;
+}
+
+.story a {
+  color: var(--text);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 1px;
+  transition: color 0.15s ease;
+}
+
+.story a:hover {
+  color: var(--accent);
+}
+
+/* Band links tinted to their album-cover colors (kept on hover). */
+.story a.conrad {
+  color: #cb8eb5;
+  border-bottom-color: #cb8eb5;
+}
+
+.story a.threadbare {
+  color: #acc0c3;
+  border-bottom-color: #acc0c3;
+}
+
+.story a.conrad:hover,
+.story a.threadbare:hover {
+  color: inherit; /* fall back to the tint below */
+  opacity: 0.75;
+}
+
+.story a.conrad:hover {
+  color: #cb8eb5;
+}
+
+.story a.threadbare:hover {
+  color: #acc0c3;
+}
+
+/* Notable-projects list: label, then indented description lines */
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1vh, 10px);
+}
+
+.projects-label {
+  color: var(--muted);
+}
+
+.project {
+  padding-left: clamp(12px, 3vw, 22px);
+}
+
+/* Repo names read as code */
+.project a {
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+/* ---------- Footer / socials ---------- */
+.socials {
+  margin-top: clamp(24px, 4.5vh, 44px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.4vh, 16px);
+  flex-shrink: 0;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 4vw, 22px);
+}
+
+.social-links a {
+  color: var(--muted);
+  display: inline-flex;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.social-links a:hover {
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.social-links svg {
+  width: clamp(19px, 2.5vh, 22px);
+  height: clamp(19px, 2.5vh, 22px);
+  display: block;
+}
+
+.signoff {
+  color: var(--faint);
+  font-size: clamp(10px, 1.6vh, 13px);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

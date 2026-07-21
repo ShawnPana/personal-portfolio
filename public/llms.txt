@@ -1,0 +1,29 @@
+# Shawn Pana
+
+> Shawn Pana (@shawn_pana) leads growth at Browser Use (YC W25), building tools that let AI agents use the web.
+
+## About
+
+Shawn Pana studied Mathematics-Computer Science and Music at UC San Diego. He is a
+multi-time hackathon winner and now leads growth at Browser Use (YC W25), where he
+works on tools that let AI agents use the web. He also makes music.
+
+## Projects
+
+- [smux](https://github.com/ShawnPana/smux): a tmux config with built-in terminal automation and agent-to-agent communication.
+- [aurl](https://github.com/ShawnPana/aurl): a CLI tool that turns any API (OpenAPI, Swagger, GraphQL) into a command.
+- [browser-use](https://github.com/browser-use/browser-use): the open-source library that lets AI agents control a browser.
+
+## Music
+
+- [Conrad Ave](https://open.spotify.com/artist/62cEXgXJDt2FSXsUrUqIOt)
+- [Threadbare](https://open.spotify.com/artist/41KKMPcJdhwlRk9syrfaP6)
+
+## Links
+
+- Website: https://shawnpana.com
+- GitHub: https://github.com/ShawnPana
+- LinkedIn: https://www.linkedin.com/in/shawnpana/
+- X: https://x.com/shawn_pana
+- Devpost: https://devpost.com/ShawnPana
+- Email: shawn@browser-use.com
