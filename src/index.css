@@ -118,10 +118,19 @@ h1 {
 
 .handle {
   margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--muted);
   font-family: var(--mono);
   font-size: clamp(12px, min(3.4vw, 1.9vh), 14px);
   transition: color 0.15s ease;
+}
+
+.handle-x {
+  width: 0.85em;
+  height: 0.85em;
+  flex-shrink: 0;
 }
 
 .handle:hover {
