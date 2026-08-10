@@ -70,7 +70,7 @@ export default function App() {
         <p>
           I studied Mathematics-Computer Science and Music at{' '}
           <a href="https://www.ucsd.edu">UC San Diego</a>, won a few{' '}
-          <a href="https://devpost.com/ShawnPana">hackathons</a>, and now lead growth at{' '}
+          <a href="https://devpost.com/ShawnPana">hackathons</a>, and led growth at{' '}
           <a href="https://browser-use.com">Browser Use (YC W25)</a> — building tools that let AI
           agents use the web.
         </p>
@@ -82,8 +82,10 @@ export default function App() {
             terminal automation and agent-to-agent communication.
           </p>
           <p className="project">
-            <a href="https://github.com/ShawnPana/aurl">aurl</a> — a CLI tool that turns any API
-            (OpenAPI, Swagger, GraphQL) into a command.
+            <a href="https://phone-harness.com/?utm_source=personal-portfolio&utm_campaign=phone-harness-hyperlink">
+              phone-harness
+            </a>{' '}
+            — a harness that lets AI agents control a real iPhone.
           </p>
           <p className="project">
             <a href="https://github.com/browser-use/browser-use">browser-use</a> — the open-source
