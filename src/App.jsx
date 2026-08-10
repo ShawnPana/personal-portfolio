@@ -71,8 +71,7 @@ export default function App() {
           I studied Mathematics-Computer Science and Music at{' '}
           <a href="https://www.ucsd.edu">UC San Diego</a>, won a few{' '}
           <a href="https://devpost.com/ShawnPana">hackathons</a>, and led growth at{' '}
-          <a href="https://browser-use.com">Browser Use (YC W25)</a> — building tools that let AI
-          agents use the web.
+          <a href="https://browser-use.com">Browser Use (YC W25)</a>.
         </p>
 
         <div className="projects">
