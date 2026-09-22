@@ -81,7 +81,7 @@ export default function App() {
             <a href="https://phone-harness.com/?utm_source=personal-portfolio&utm_campaign=phone-harness-hyperlink">
               phone-harness
             </a>{' '}
-            — a harness that lets agents control your personal iPhone or Android phone (YC F26).
+            — a harness that lets agents control your personal iPhone or Android phone.
           </p>
           <p className="project">
             <a href="https://github.com/browser-use/browser-use">browser-use</a> — the open-source

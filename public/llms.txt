@@ -11,7 +11,7 @@ your personal iPhone or Android phone. He also makes music.
 
 ## Projects
 
-- [phone-harness](https://phone-harness.com): a harness that lets agents control your personal iPhone or Android phone (YC F26).
+- [phone-harness](https://phone-harness.com): a harness that lets agents control your personal iPhone or Android phone.
 - [browser-use](https://github.com/browser-use/browser-use): the open-source library that lets AI agents control a browser.
 - [smux](https://github.com/ShawnPana/smux): a tmux config with built-in terminal automation and agent-to-agent communication.
 
