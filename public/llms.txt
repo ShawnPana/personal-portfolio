@@ -1,17 +1,18 @@
 # Shawn Pana
 
-> Shawn Pana (@shawn_pana) leads growth at Browser Use (YC W25), building tools that let AI agents use the web.
+> Shawn Pana (@shawn_pana) runs Phone Harness (YC F26), a harness that lets agents control your personal iPhone or Android phone.
 
 ## About
 
 Shawn Pana studied Mathematics-Computer Science and Music at UC San Diego. He is a
-multi-time hackathon winner and now leads growth at Browser Use (YC W25), where he
-works on tools that let AI agents use the web. He also makes music.
+multi-time hackathon winner and previously led growth at Browser Use (YC W25). He now
+runs Phone Harness (YC F26), a harness that lets agents control your personal iPhone
+or Android phone. He also makes music.
 
 ## Projects
 
 - [smux](https://github.com/ShawnPana/smux): a tmux config with built-in terminal automation and agent-to-agent communication.
-- [aurl](https://github.com/ShawnPana/aurl): a CLI tool that turns any API (OpenAPI, Swagger, GraphQL) into a command.
+- [phone-harness](https://phone-harness.com): a harness that lets AI agents control a real iPhone or Android phone.
 - [browser-use](https://github.com/browser-use/browser-use): the open-source library that lets AI agents control a browser.
 
 ## Music
@@ -26,4 +27,4 @@ works on tools that let AI agents use the web. He also makes music.
 - LinkedIn: https://www.linkedin.com/in/shawnpana/
 - X: https://x.com/shawn_pana
 - Devpost: https://devpost.com/ShawnPana
-- Email: shawn@browser-use.com
+- Email: shawn@phone-harness.com
