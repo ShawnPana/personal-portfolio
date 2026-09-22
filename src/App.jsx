@@ -71,7 +71,7 @@ export default function App() {
           I studied Mathematics-Computer Science and Music at{' '}
           <a href="https://www.ucsd.edu">UC San Diego</a>, won a few{' '}
           <a href="https://devpost.com/ShawnPana">hackathons</a>, and led growth at{' '}
-          <a href="https://browser-use.com">Browser Use (YC W25)</a>. Solo founder and CEO of{' '}
+          <a href="https://browser-use.com">Browser Use</a> (YC W25). Solo founder and CEO of{' '}
           <a href="https://phone-harness.com">Phone Harness</a> (YC F26).
         </p>
 
