@@ -71,26 +71,25 @@ export default function App() {
           I studied Mathematics-Computer Science and Music at{' '}
           <a href="https://www.ucsd.edu">UC San Diego</a>, won a few{' '}
           <a href="https://devpost.com/ShawnPana">hackathons</a>, and led growth at{' '}
-          <a href="https://browser-use.com">Browser Use (YC W25)</a>. Now running{' '}
-          <a href="https://phone-harness.com">Phone Harness</a>, a harness that lets agents
-          control your personal iPhone or Android phone (YC F26).
+          <a href="https://browser-use.com">Browser Use (YC W25)</a>. Solo founder and CEO of{' '}
+          <a href="https://phone-harness.com">Phone Harness</a> (YC F26).
         </p>
 
         <div className="projects">
           <span className="projects-label">Some notable projects of mine:</span>
           <p className="project">
-            <a href="https://github.com/ShawnPana/smux">smux</a> — a tmux config with built-in
-            terminal automation and agent-to-agent communication.
-          </p>
-          <p className="project">
             <a href="https://phone-harness.com/?utm_source=personal-portfolio&utm_campaign=phone-harness-hyperlink">
               phone-harness
             </a>{' '}
-            — a harness that lets AI agents control a real iPhone or Android phone.
+            — a harness that lets agents control your personal iPhone or Android phone (YC F26).
           </p>
           <p className="project">
             <a href="https://github.com/browser-use/browser-use">browser-use</a> — the open-source
             library that lets AI agents control a browser.
+          </p>
+          <p className="project">
+            <a href="https://github.com/ShawnPana/smux">smux</a> — a tmux config with built-in
+            terminal automation and agent-to-agent communication.
           </p>
         </div>
 

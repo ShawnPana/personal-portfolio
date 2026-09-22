@@ -1,19 +1,19 @@
 # Shawn Pana
 
-> Shawn Pana (@shawn_pana) runs Phone Harness (YC F26), a harness that lets agents control your personal iPhone or Android phone.
+> Shawn Pana (@shawn_pana) is the solo founder and CEO of Phone Harness (YC F26), a harness that lets agents control your personal iPhone or Android phone.
 
 ## About
 
 Shawn Pana studied Mathematics-Computer Science and Music at UC San Diego. He is a
-multi-time hackathon winner and previously led growth at Browser Use (YC W25). He now
-runs Phone Harness (YC F26), a harness that lets agents control your personal iPhone
-or Android phone. He also makes music.
+multi-time hackathon winner and previously led growth at Browser Use (YC W25). He is now
+the solo founder and CEO of Phone Harness (YC F26), a harness that lets agents control
+your personal iPhone or Android phone. He also makes music.
 
 ## Projects
 
-- [smux](https://github.com/ShawnPana/smux): a tmux config with built-in terminal automation and agent-to-agent communication.
-- [phone-harness](https://phone-harness.com): a harness that lets AI agents control a real iPhone or Android phone.
+- [phone-harness](https://phone-harness.com): a harness that lets agents control your personal iPhone or Android phone (YC F26).
 - [browser-use](https://github.com/browser-use/browser-use): the open-source library that lets AI agents control a browser.
+- [smux](https://github.com/ShawnPana/smux): a tmux config with built-in terminal automation and agent-to-agent communication.
 
 ## Music
 
