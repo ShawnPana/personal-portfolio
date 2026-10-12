@@ -104,6 +104,16 @@ export default function App() {
           </a>
           .
         </p>
+
+        <img
+          className="event-photo"
+          src="/shawn-talk.webp"
+          alt="Shawn Pana speaking at an event"
+          width="1600"
+          height="1067"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
 
       <footer className="socials">

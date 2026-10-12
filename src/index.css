@@ -14,11 +14,11 @@
   box-sizing: border-box;
 }
 
-/* Lock the page to the viewport — no scrolling, ever. */
+/* Fill the viewport when the bio fits; scroll once the event photo makes it taller. */
 html,
 body {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -34,17 +34,16 @@ a {
   text-decoration: none;
 }
 
-/* ---------- Page: fills the viewport exactly, content scales to fit ---------- */
+/* ---------- Page: fills the viewport, content stays centered until it must scroll ---------- */
 .page {
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   max-width: 600px;
   margin: 0 auto;
   padding: clamp(12px, 4vh, 56px) clamp(20px, 6vw, 32px);
   display: flex;
   flex-direction: column;
   justify-content: center; /* bunch content together, centered vertically */
-  overflow: hidden;
   animation: fade-in 0.5s ease-out;
 }
 
@@ -209,6 +208,15 @@ h1 {
 .project a {
   font-family: var(--mono);
   font-weight: 500;
+}
+
+/* Event photo sits after the bio, full column width */
+.event-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
 /* ---------- Footer / socials ---------- */
